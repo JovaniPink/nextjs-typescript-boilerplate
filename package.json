@@ -1,15 +1,27 @@
 {
+  "title": "",
   "name": "nextjs-typescript-boilerplate",
   "description": "A TypeScript starter for NextJS. No plugins and styling. Exactly the necessary to start.",
-  "version": "0.1.0",
-  "private": true,
-  "author": "",
-  "license": "MIT",
   "keywords": [
     "react",
     "nextjs",
     "nextjs-starter",
     "typescript"
+  ],
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "author": "",
+  "contributors": [
+    ""
   ],
   "scripts": {
     "dev": "next dev",
