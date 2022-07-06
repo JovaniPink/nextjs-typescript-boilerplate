@@ -1,6 +1,6 @@
 # NextJS Typescript Boilerplate
 
-Bootstrap a developer-friendly NextJS app configured with:
+Bootstrap a developer-friendly NextJS app as a [MUI V5](https://mui.com/) template configured with:
 
 - [Typescript](https://www.typescriptlang.org/)
 - Linting with [ESLint](https://eslint.org/)
