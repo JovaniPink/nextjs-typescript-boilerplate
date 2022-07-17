@@ -1,17 +1,26 @@
 {
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "emotion"
   ],
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
     // Uncomment the following lines to enable eslint-config-prettier
     // Is not enabled right now to avoid issues with the Next.js repo
-    // "prettier",
-    // "prettier/@typescript-eslint"
+    "prettier",
+    "prettier/@typescript-eslint"
   ],
   "env": {
     "es6": true,
@@ -44,6 +53,15 @@
           "error"
         ]
       }
-    ]
+    ],
+    "@emotion/jsx-import": "error",
+    "@emotion/no-vanilla": "error",
+    "@emotion/import-from-emotion": "error",
+    "@emotion/styled-import": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
