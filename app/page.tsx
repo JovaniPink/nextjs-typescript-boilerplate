@@ -1,24 +1,19 @@
-import Head from 'next/head';
+'use client';
 
 export const Home = () => (
   <div className="container">
-    <Head>
-      <title>Create Next App</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-
     <main>
       <h1 className="title">
         Welcome to <a href="https://nextjs.org">Next.js!</a>
       </h1>
 
       <p className="description">
-        Get started by editing <code>pages/index.tsx</code>
+        Get started by editing <code>app/page.tsx</code>
       </p>
 
       <button
         onClick={() => {
-          window.alert('With typescript and Jest');
+          window.alert('With TypeScript and Jest');
         }}
       >
         Test Button
@@ -43,22 +38,15 @@ export const Home = () => (
           <p>Discover and deploy boilerplate example Next.js projects.</p>
         </a>
 
-        <a
-          href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          className="card"
-        >
+        <a href="https://vercel.com/new" className="card">
           <h3>Deploy &rarr;</h3>
-          <p>Instantly deploy your Next.js site to a public URL with Vercel.</p>
+          <p>Deploy your Next.js site to a public URL with Vercel.</p>
         </a>
       </div>
     </main>
 
     <footer>
-      <a
-        href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">
         Powered by Vercel
       </a>
     </footer>
@@ -150,7 +138,6 @@ export const Home = () => (
         align-items: center;
         justify-content: center;
         flex-wrap: wrap;
-
         max-width: 800px;
         margin-top: 3rem;
       }

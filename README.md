@@ -1,45 +1,83 @@
-# NextJS Typescript Boilerplate
+# Next.js TypeScript Boilerplate
 
-Bootstrap a developer-friendly NextJS app configured with:
+A small, production-buildable Next.js 16 starter using the App Router, React 19, TypeScript 6, Jest 30, Testing Library, and flat ESLint configuration.
 
-- [Typescript](https://www.typescriptlang.org/)
-- Linting with [ESLint](https://eslint.org/)
-- Formatting with [Prettier](https://prettier.io/)
-- Linting, typechecking and formatting on by default using [`husky`](https://github.com/typicode/husky) for commit hooks
-- Testing with [Jest](https://jestjs.io/) and [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro)
-- [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate)
+## Requirements
 
-The starter targets Node.js 22.22.1 or newer and uses current Next.js 16, React 19, Jest 30, Testing Library, TypeScript, and flat ESLint configuration. Run `npm install`, then `npm run test-all` for the complete validation gate.
+- Node.js 22.22.1 or newer
+- npm 10 or newer
 
-## Deploy your own
+CI validates the committed lockfile on Node 22.22.1 and Node 24.
 
-Deploy the example using [Vercel](https://vercel.com):
+## Quick start
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/next.js/tree/canary/examples/with-typescript-eslint-jest)
+```bash
+npm ci
+npm run dev
+```
 
-## How to use
+Open [http://localhost:3000](http://localhost:3000). Edit `app/page.tsx` to change the home page or `app/api/hello/route.ts` to change the example route handler.
 
-Coming Soon.
+## Validation
 
-## Todo Checklist
+Run the same complete gate used by CI:
 
-A helpful checklist to gauge how your README is coming on what I would like to finish:
+```bash
+npm run test-all
+```
 
-- [ ] Lots of items! :)
+The gate runs ESLint, TypeScript, Jest, and a production Next.js build. Formatting and dependency checks are available separately:
 
-## 🤝 Contributing
+```bash
+npm run format:check
+npm audit --audit-level=high
+```
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+## Commands
 
-Please make sure to update tests as appropriate.
+| Command              | Purpose                                           |
+| -------------------- | ------------------------------------------------- |
+| `npm run dev`        | Start the Turbopack development server            |
+| `npm run build`      | Create the production build                       |
+| `npm start`          | Serve an existing production build                |
+| `npm run lint`       | Run flat-config ESLint with zero warnings allowed |
+| `npm run type-check` | Type-check without emitting files                 |
+| `npm test`           | Run the Jest suite once                           |
+| `npm run test:watch` | Run Jest in watch mode                            |
+| `npm run test-all`   | Run the complete CI gate                          |
 
-1. Fork this repository;
-2. Create your branch: `git checkout -b my-new-feature`;
-3. Commit your changes: `git commit -m 'Add some feature'`;
-4. Push to the branch: `git push origin my-new-feature`.
+## Project structure
 
-**After your pull request is merged**, you can safely delete your branch.
+```text
+app/
+  api/hello/route.ts  Example route handler
+  layout.tsx          Root metadata and document layout
+  page.tsx            Home page
+test/
+  pages/              Testing Library and snapshot coverage
+```
 
-## 📝 License
+This starter uses the [App Router](https://nextjs.org/docs/app). Next.js maps files under `app/` to routes and uses route handlers under `app/**/route.ts` for HTTP endpoints.
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for more information.
+## Commit hooks
+
+Husky runs `lint-staged` before commits and TypeScript before pushes. CI remains authoritative; hooks provide earlier local feedback.
+
+## Deployment
+
+Build and run the production server locally with:
+
+```bash
+npm run build
+npm start
+```
+
+The output can be deployed to Vercel or another platform that supports Next.js. See the [official deployment guide](https://nextjs.org/docs/app/getting-started/deploying).
+
+## Contributing
+
+Create a focused branch, update tests and documentation with behavior changes, and run `npm run test-all` before opening a pull request.
+
+## License
+
+Licensed under the MIT License. See [LICENSE.md](LICENSE.md).
