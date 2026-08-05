@@ -9,6 +9,8 @@ Bootstrap a developer-friendly NextJS app configured with:
 - Testing with [Jest](https://jestjs.io/) and [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro)
 - [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate)
 
+The starter targets Node.js 22.22.1 or newer and uses current Next.js 16, React 19, Jest 30, Testing Library, TypeScript, and flat ESLint configuration. Run `npm install`, then `npm run test-all` for the complete validation gate.
+
 ## Deploy your own
 
 Deploy the example using [Vercel](https://vercel.com):

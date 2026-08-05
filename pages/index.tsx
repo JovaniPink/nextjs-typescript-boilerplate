@@ -1,6 +1,6 @@
-import Head from 'next/head'
+import Head from 'next/head';
 
-export const Home = (): JSX.Element => (
+export const Home = () => (
   <div className="container">
     <Head>
       <title>Create Next App</title>
@@ -18,7 +18,7 @@ export const Home = (): JSX.Element => (
 
       <button
         onClick={() => {
-          window.alert('With typescript and Jest')
+          window.alert('With typescript and Jest');
         }}
       >
         Test Button
@@ -59,7 +59,7 @@ export const Home = (): JSX.Element => (
         target="_blank"
         rel="noopener noreferrer"
       >
-        Powered by <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
+        Powered by Vercel
       </a>
     </footer>
 
@@ -89,10 +89,6 @@ export const Home = (): JSX.Element => (
         display: flex;
         justify-content: center;
         align-items: center;
-      }
-
-      footer img {
-        margin-left: 0.5rem;
       }
 
       footer a {
@@ -138,8 +134,15 @@ export const Home = (): JSX.Element => (
         border-radius: 5px;
         padding: 0.75rem;
         font-size: 1.1rem;
-        font-family: Menlo, Monaco, Lucida Console, Liberation Mono,
-          DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+        font-family:
+          Menlo,
+          Monaco,
+          Lucida Console,
+          Liberation Mono,
+          DejaVu Sans Mono,
+          Bitstream Vera Sans Mono,
+          Courier New,
+          monospace;
       }
 
       .grid {
@@ -161,7 +164,9 @@ export const Home = (): JSX.Element => (
         text-decoration: none;
         border: 1px solid #eaeaea;
         border-radius: 10px;
-        transition: color 0.15s ease, border-color 0.15s ease;
+        transition:
+          color 0.15s ease,
+          border-color 0.15s ease;
       }
 
       .card:hover,
@@ -182,10 +187,6 @@ export const Home = (): JSX.Element => (
         line-height: 1.5;
       }
 
-      .logo {
-        height: 1em;
-      }
-
       @media (max-width: 600px) {
         .grid {
           width: 100%;
@@ -199,8 +200,18 @@ export const Home = (): JSX.Element => (
       body {
         padding: 0;
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-          Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+        font-family:
+          -apple-system,
+          BlinkMacSystemFont,
+          Segoe UI,
+          Roboto,
+          Oxygen,
+          Ubuntu,
+          Cantarell,
+          Fira Sans,
+          Droid Sans,
+          Helvetica Neue,
+          sans-serif;
       }
 
       * {
@@ -208,6 +219,6 @@ export const Home = (): JSX.Element => (
       }
     `}</style>
   </div>
-)
+);
 
-export default Home
+export default Home;

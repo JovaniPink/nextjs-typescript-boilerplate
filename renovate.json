@@ -1,5 +1,15 @@
 {
-  "extends": [
-    "config:base"
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "description": "Keep ESLint within the current Next.js plugin peer ranges",
+      "matchPackageNames": ["eslint"],
+      "allowedVersions": "<10"
+    },
+    {
+      "description": "Keep TypeScript within the current typescript-eslint peer range",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<6.1"
+    }
   ]
 }

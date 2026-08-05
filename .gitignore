@@ -1,62 +1,33 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
-
-# Apple
-.DS_Store
-
-# VS Code
-.vscode/
-
-# Ignore node_modules
-node_modules/
+# Dependencies
+/node_modules
 /.pnp
-.pnp.js
+.pnp.*
 
-# Ignore Temps
-src/.tmp/
-dist/
+# Next.js build output
+/.next/
+/out/
 
-### JavaScript ###
+# Test output
+/coverage/
+
+# Local environment files
+.env*
+!.env.example
+
+# Tool caches and generated state
+.cache/
+*.tsbuildinfo
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.netlify/
 
-# Project dependencies (CRA)
-/coverage
-/build
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Editors and operating systems
+.DS_Store
+.vscode/
 
-# Project dependencies (Gatsby)
-.cache
-public
-node_modules
-package-lock.json
-yarn.lock
-
-### Elm ###
-# elm-package generated files
-elm-stuff
-# elm-repl generated files
-repl-temp-*
-
-### Python ###
-# Byte-compiled / optimized / DLL files
+# Python environments occasionally used alongside this starter
 __pycache__/
 *.py[cod]
-*$py.class
-
-# Environments
-.env
-.venv
-env/
+.venv/
 venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Logs
-logs
-*.log
-.netlify/
