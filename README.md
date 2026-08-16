@@ -69,6 +69,13 @@ For a new product, replace the package metadata, page content, and site metadata
 Keep the quality gate intact while adding only the domain dependencies the product
 actually needs.
 
+## Application patterns
+
+The [application pattern guide](docs/README.md) distills reusable conventions for
+application architecture, forms, XState workflows, coding agents, and safe public
+publication. These are opt-in product patterns, not dependencies installed by the
+starter.
+
 ## Canonical commands
 
 | Command                               | Purpose                                                  |
@@ -93,6 +100,7 @@ actually needs.
 src/
   app/                 App Router layouts, pages, styles, and route handlers
   components/          Reusable UI with explicit client boundaries
+docs/                  Optional application patterns and publication guidance
 test/
   api/                 Route-handler contracts
   app/                 Page-level behavior

@@ -62,6 +62,9 @@ products that need them, not in the starter.
   through Corepack so hooks cannot fall back to a global client or registry download.
 - Keep setup-node package-manager caching disabled while strict npm `devEngines` is in
   force; setup-node queries the runner's bundled npm before Corepack selects npm 12.
+- Follow [`docs/coding-agents.md`](docs/coding-agents.md) when extending agent
+  instructions and [`docs/publication-safety.md`](docs/publication-safety.md) before
+  deriving a public artifact from another workspace or non-public source.
 
 ## Quality gate
 
