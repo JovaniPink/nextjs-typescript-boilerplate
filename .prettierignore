@@ -1,6 +1,5 @@
-node_modules
-.cache
-.next
-package.json
+.next/
+coverage/
+node_modules/
 package-lock.json
-public
+next-env.d.ts

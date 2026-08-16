@@ -1,43 +1,96 @@
-# NextJS Typescript Boilerplate
+# Next.js TypeScript Boilerplate
 
-Bootstrap a developer-friendly NextJS app configured with:
+A production-minded starting point for small and medium Next.js applications. It
+captures the shared baseline used across Jovani Pink's maintained Next.js projects
+without pulling in product-specific choices such as authentication, a database, or a
+deployment provider.
 
-- [Typescript](https://www.typescriptlang.org/)
-- Linting with [ESLint](https://eslint.org/)
-- Formatting with [Prettier](https://prettier.io/)
-- Linting, typechecking and formatting on by default using [`husky`](https://github.com/typicode/husky) for commit hooks
-- Testing with [Jest](https://jestjs.io/) and [`react-testing-library`](https://testing-library.com/docs/react-testing-library/intro)
-- [Renovate](https://www.whitesourcesoftware.com/free-developer-tools/renovate)
+## What is included
 
-## Deploy your own
+- Next.js 16 App Router and React 19
+- Strict TypeScript with a TypeScript 7 native CLI check and a TypeScript 6
+  compatibility check
+- Tailwind CSS 4 with CSS-first theme tokens
+- ESLint 9 flat config and Prettier 3
+- Jest 30, Testing Library, semantic component tests, and a route-handler contract test
+- One complete `test-all` quality gate for local work and CI
+- GitHub Actions on Node 22 and Node 24
+- Husky and lint-staged for fast, scoped local feedback
+- Production and full dependency audit commands
+- Renovate with grouped non-major updates and explicit approval for majors
+- Version-matched Next.js documentation guidance for coding agents
 
-Deploy the example using [Vercel](https://vercel.com):
+## Requirements
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/project?template=https://github.com/vercel/next.js/tree/canary/examples/with-typescript-eslint-jest)
+- Node.js `>=22.15.0`
+- npm
 
-## How to use
+The repository includes an `.nvmrc` for the oldest supported runtime. CI validates both
+Node 22 and Node 24.
 
-Coming Soon.
+## Start here
 
-## Todo Checklist
+```bash
+npm ci
+npm run dev
+```
 
-A helpful checklist to gauge how your README is coming on what I would like to finish:
+Open [http://localhost:3000](http://localhost:3000). The health contract is available at
+[http://localhost:3000/api/health](http://localhost:3000/api/health).
 
-- [ ] Lots of items! :)
+For a new product, replace the package metadata, page content, and site metadata first.
+Keep the quality gate intact while adding only the domain dependencies the product
+actually needs.
 
-## 🤝 Contributing
+## Canonical commands
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+| Command                      | Purpose                                                  |
+| ---------------------------- | -------------------------------------------------------- |
+| `npm run dev`                | Start the local development server                       |
+| `npm run build`              | Create the production build                              |
+| `npm start`                  | Serve the production build                               |
+| `npm run lint`               | Run ESLint                                               |
+| `npm run format:check`       | Verify formatting without changing files                 |
+| `npm run toolchain:check`    | Verify the dual TypeScript compiler contract             |
+| `npm run typecheck`          | Generate route types and check with TypeScript 7         |
+| `npm run typecheck:compat`   | Generate route types and check with TypeScript 6         |
+| `npm test`                   | Run the Jest suite                                       |
+| `npm run test:ci`            | Run deterministic tests with coverage                    |
+| `npm run test-all`           | Run formatting, lint, types, tests, and production build |
+| `npm run audit:production`   | Audit runtime dependencies at high severity              |
+| `npm run audit:dependencies` | Audit the complete dependency graph at high severity     |
 
-Please make sure to update tests as appropriate.
+## Project shape
 
-1. Fork this repository;
-2. Create your branch: `git checkout -b my-new-feature`;
-3. Commit your changes: `git commit -m 'Add some feature'`;
-4. Push to the branch: `git push origin my-new-feature`.
+```text
+src/
+  app/                 App Router layouts, pages, styles, and route handlers
+  components/          Reusable UI with explicit client boundaries
+test/
+  api/                 Route-handler contracts
+  app/                 Page-level behavior
+  components/          Focused interaction tests
+scripts/               Repository and toolchain checks
+```
 
-**After your pull request is merged**, you can safely delete your branch.
+The starter uses a Node.js server deployment by default so every Next.js feature remains
+available. Add a provider adapter, static export, database, authentication, analytics,
+or state management only when the product requirements justify it.
 
-## 📝 License
+## Quality contract
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for more information.
+Before opening a pull request, run:
+
+```bash
+npm run test-all
+npm run audit:production
+npm run audit:dependencies
+```
+
+CI uses the lockfile via `npm ci` and executes the same repository gate. Major
+dependency updates remain approval-gated because framework, compiler, and lint majors
+need compatibility review rather than automatic merging.
+
+## License
+
+[MIT](LICENSE.md)
