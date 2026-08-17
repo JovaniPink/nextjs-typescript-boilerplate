@@ -41,7 +41,7 @@
     "test-all": "npm run format:check && npm run lint && npm run toolchain:check && npm run typecheck && npm run typecheck:compat && npm run test:ci && npm run build",
     "audit:production": "npm audit --omit=dev --audit-level=high",
     "audit:dependencies": "npm audit --audit-level=high",
-    "prepare": "husky"
+    "prepare": "node scripts/prepare.mjs"
   },
   "dependencies": {
     "next": "16.3.1",
