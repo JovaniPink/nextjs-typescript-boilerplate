@@ -41,6 +41,12 @@ two optional native scripts in the current graph because the complete type, test
 production-build gates pass without them. `.npmrc` turns any newly introduced,
 unreviewed install script into a clean-install failure.
 
+CI explicitly disables `actions/setup-node`'s automatic package-manager cache. That
+cache queries the runner's bundled npm before Corepack selects the declared npm 12
+release, which conflicts with the fail-closed `devEngines` contract. The workflow
+instead treats a clean install from the committed lockfile as the reproducibility
+boundary.
+
 The TypeScript environment intentionally uses the latest Node 22 type definitions. That
 keeps code from compiling against a Node 24-only API while the starter still claims Node
 22 support.

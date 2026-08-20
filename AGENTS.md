@@ -60,6 +60,8 @@ products that need them, not in the starter.
   global allow-all escape hatch.
 - Keep Git hooks offline-safe: invoke installed binaries directly and run npm scripts
   through Corepack so hooks cannot fall back to a global client or registry download.
+- Keep setup-node package-manager caching disabled while strict npm `devEngines` is in
+  force; setup-node queries the runner's bundled npm before Corepack selects npm 12.
 
 ## Quality gate
 
