@@ -1,1 +1,1 @@
-npm run typecheck
+corepack npm run typecheck

@@ -20,9 +20,25 @@
     "tailwindcss",
     "typescript"
   ],
-  "packageManager": "npm@11.12.1",
+  "packageManager": "npm@12.0.2+sha224.4c4977784242293bf5a4f80d28aab2d001ba8a7a4532285591a158aa",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^22.22.2 || ^24.15.0",
+      "onFail": "error"
+    },
+    "packageManager": {
+      "name": "npm",
+      "version": "12.0.2",
+      "onFail": "error"
+    }
+  },
+  "allowScripts": {
+    "fsevents": false,
+    "unrs-resolver": false
+  },
   "engines": {
-    "node": ">=22.15.0"
+    "node": "^22.22.2 || ^24.15.0"
   },
   "scripts": {
     "dev": "next dev",
@@ -38,9 +54,9 @@
     "test": "jest --watchman=false",
     "test:watch": "jest --watch --watchman=false",
     "test:ci": "jest --runInBand --coverage --watchman=false",
-    "test-all": "npm run format:check && npm run lint && npm run toolchain:check && npm run typecheck && npm run typecheck:compat && npm run test:ci && npm run build",
-    "audit:production": "npm audit --omit=dev --audit-level=high",
-    "audit:dependencies": "npm audit --audit-level=high",
+    "test-all": "corepack npm run format:check && corepack npm run lint && corepack npm run toolchain:check && corepack npm run typecheck && corepack npm run typecheck:compat && corepack npm run test:ci && corepack npm run build",
+    "audit:production": "corepack npm audit --omit=dev --audit-level=high",
+    "audit:dependencies": "corepack npm audit --audit-level=high",
     "prepare": "node scripts/prepare.mjs"
   },
   "dependencies": {
@@ -53,9 +69,9 @@
     "@testing-library/dom": "10.4.1",
     "@testing-library/jest-dom": "7.0.1",
     "@testing-library/react": "16.3.2",
-    "@testing-library/user-event": "14.6.4",
+    "@testing-library/user-event": "14.6.5",
     "@types/jest": "30.0.0",
-    "@types/node": "24.13.3",
+    "@types/node": "22.20.1",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "@typescript/native": "npm:typescript@7.0.2",

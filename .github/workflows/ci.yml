@@ -37,13 +37,19 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          node --version
+          corepack npm --version
+          corepack npm ci
+
+      - name: Verify dependency install-script policy
+        run: corepack npm install-scripts ls
 
       - name: Run repository gate
-        run: npm run test-all
+        run: corepack npm run test-all
 
       - name: Audit production dependencies
-        run: npm run audit:production
+        run: corepack npm run audit:production
 
       - name: Audit all dependencies
-        run: npm run audit:dependencies
+        run: corepack npm run audit:dependencies
