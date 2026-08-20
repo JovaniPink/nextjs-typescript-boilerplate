@@ -91,7 +91,7 @@ Automated scans are a backstop, not proof that prose and screenshots are safe.
 rg -n --hidden \
   -g '!node_modules/**' \
   -g '!.git/**' \
-  '(BEGIN (RSA|EC|OPENSSH) PRIVATE KEY|Authorization:|Bearer [A-Za-z0-9._-]+|gh[pousr]_[A-Za-z0-9_]+)'
+  '(BEGIN (RSA|EC|OPENSSH) PRIVATE KEY|Authorization:|Bearer [A-Za-z0-9._-]+|gh[pousr]_[A-Za-z0-9._-]{20,}|github_pat_[A-Za-z0-9_]{20,})'
 
 rg -n \
   '(/Users/[^/]+|@[A-Za-z0-9.-]+\.(com|net|org)|https?://[^ )]+)' \
@@ -99,7 +99,11 @@ rg -n \
 ```
 
 Every match needs human classification. Expected synthetic examples and approved public
-links can remain; a scan with zero matches can still miss a secret.
+links can remain; a scan with zero matches can still miss a secret. The GitHub token
+alternatives cover classic personal, OAuth, GitHub App user, GitHub App installation,
+refresh, and fine-grained personal access token prefixes documented by GitHub. Keep
+provider-native secret scanning enabled because local pattern matching is deliberately
+defensive rather than an exhaustive credential detector.
 
 Also inspect:
 
