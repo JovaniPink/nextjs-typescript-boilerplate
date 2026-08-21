@@ -66,8 +66,8 @@ interface ProfileRepository {
 }
 ```
 
-Keep retries, timeouts, idempotency keys, and error mapping near the adapter. Keep
-product decisions—such as whether a timeout is safe to retry—in the workflow contract.
+Keep retries, timeouts, idempotency keys, and error mapping near the adapter. Define
+product decisions, such as whether a timeout is safe to retry, in the workflow contract.
 Do not expose raw provider errors directly to users or logs.
 
 ## Data and evidence

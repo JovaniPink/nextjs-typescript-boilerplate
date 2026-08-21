@@ -33,9 +33,9 @@ Place server secrets in the chosen platform's secret store. Commit an `.env.exam
 containing names and safe placeholders only. Remember that variables exposed to browser
 bundles are public.
 
-If a secret reaches Git—even briefly—assume history retains it. Stop publication, rotate
-or revoke the credential, remove it from the proposed history with an approved process,
-and verify the remote state before continuing.
+If a secret reaches Git, even briefly, assume history retains it. Stop publication,
+rotate or revoke the credential, remove it from the proposed history with an approved
+process, and verify the remote state before continuing.
 
 ## Rewrite patterns, do not redact documents in place
 
@@ -88,14 +88,12 @@ Search the staged files for common credential shapes and private-context markers
 Automated scans are a backstop, not proof that prose and screenshots are safe.
 
 ```bash
-rg -n --hidden \
-  -g '!node_modules/**' \
-  -g '!.git/**' \
+git grep --cached -nI -E \
   '(BEGIN (RSA|EC|OPENSSH) PRIVATE KEY|Authorization:|Bearer [A-Za-z0-9._-]+|gh[pousr]_[A-Za-z0-9._-]{20,}|github_pat_[A-Za-z0-9_]{20,})'
 
-rg -n \
+git grep --cached -nI -E \
   '(/Users/[^/]+|@[A-Za-z0-9.-]+\.(com|net|org)|https?://[^ )]+)' \
-  docs/
+  -- docs/
 ```
 
 Every match needs human classification. Expected synthetic examples and approved public

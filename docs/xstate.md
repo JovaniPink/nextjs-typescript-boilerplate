@@ -13,7 +13,7 @@ Reach for a machine when several of these are true:
 
 - the workflow has three or more meaningful phases;
 - events are legal in some states and illegal in others;
-- async work can succeed, fail, time out, or be cancelled;
+- async work can succeed, fail, time out, or be canceled;
 - the interface needs guarded transitions or explicit retry policy;
 - multiple components observe or send events to one workflow;
 - the sequence must be tested independently from React;
