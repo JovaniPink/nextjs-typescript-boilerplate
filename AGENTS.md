@@ -37,6 +37,7 @@ products that need them, not in the starter.
 | `corepack npm run build`            | Create the production build                   |
 | `corepack npm run lint`             | Run ESLint                                    |
 | `corepack npm run format:check`     | Verify Prettier formatting                    |
+| `corepack npm run starter:check`    | Validate install and route-type contracts     |
 | `corepack npm run toolchain:check`  | Validate the dual-compiler contract           |
 | `corepack npm run typecheck`        | Check with the TypeScript 7 native CLI        |
 | `corepack npm run typecheck:compat` | Check with the TypeScript 6 compatibility API |

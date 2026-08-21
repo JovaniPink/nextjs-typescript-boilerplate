@@ -95,6 +95,7 @@ starter.
 | `corepack npm start`                  | Serve the production build                               |
 | `corepack npm run lint`               | Run ESLint                                               |
 | `corepack npm run format:check`       | Verify formatting without changing files                 |
+| `corepack npm run starter:check`      | Verify install and generated-route contracts             |
 | `corepack npm run toolchain:check`    | Verify the dual TypeScript compiler contract             |
 | `corepack npm run typecheck`          | Generate route types and check with TypeScript 7         |
 | `corepack npm run typecheck:compat`   | Generate route types and check with TypeScript 6         |
@@ -138,6 +139,14 @@ CI uses the lockfile through the integrity-pinned npm release and executes the s
 repository gate. The install-script inventory must have no unreviewed entries. Major
 dependency updates remain approval-gated because framework, compiler, and lint majors
 need compatibility review rather than automatic merging.
+
+For a multi-stage production image, build the application with development dependencies
+available, then install or copy only the runtime graph into the final stage. Running
+`corepack npm ci --omit=dev` still executes npm lifecycle hooks; this starter's prepare
+contract deliberately skips Husky in that path instead of requiring a development-only
+binary. `starter:check` also prevents `.next/types` and `.next/dev/types` from being
+silently excluded after `next typegen`, so invalid App Router signatures remain part of
+both TypeScript gates.
 
 ## License
 
