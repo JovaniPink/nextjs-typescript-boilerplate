@@ -51,6 +51,16 @@ The TypeScript environment intentionally uses the latest Node 22 type definition
 keeps code from compiling against a Node 24-only API while the starter still claims Node
 22 support.
 
+### ESLint compatibility boundary
+
+ESLint intentionally remains on 9.39.5. As verified on 2026-08-21, the latest
+[`eslint-plugin-react` 7.37.5](https://www.npmjs.com/package/eslint-plugin-react/v/7.37.5)
+peer contract supports ESLint only through the 9.x line, and Next.js 16.3.1's lint
+configuration still depends on that plugin family. An ESLint 10 trial reaches the plugin
+but fails while loading its React rules. Do not hide that incompatibility with peer
+overrides; track the upstream-compatible migration in
+[issue #211](https://github.com/JovaniPink/nextjs-typescript-boilerplate/issues/211).
+
 Git hooks follow the same contract: pre-commit runs the already-installed `lint-staged`
 binary without a registry fallback, and pre-push runs the generated-route type gate
 through the declared npm release.
