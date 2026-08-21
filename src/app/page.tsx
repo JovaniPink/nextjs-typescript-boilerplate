@@ -51,8 +51,8 @@ export default function Home() {
             Start with the quality bar already in place.
           </h1>
           <p className="mt-7 max-w-2xl text-lg leading-8 text-muted sm:text-xl">
-            A focused Next.js baseline for turning an idea into a maintainable
-            product—without carrying six years of obsolete defaults into day one.
+            A focused Next.js baseline for turning an idea into a maintainable product
+            without carrying six years of obsolete defaults into day one.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <a
@@ -119,7 +119,7 @@ export default function Home() {
           Edit <code className="font-mono text-xs text-ink">src/app/page.tsx</code> to
           begin.
         </p>
-        <p>Next.js 16 · React 19 · TypeScript 7/6</p>
+        <p>Next.js 16, React 19, TypeScript 7/6</p>
       </footer>
     </main>
   );
