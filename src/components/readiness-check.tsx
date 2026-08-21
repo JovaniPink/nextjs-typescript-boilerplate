@@ -35,7 +35,7 @@ export function ReadinessCheck() {
           aria-hidden="true"
           className="grid size-8 place-items-center rounded-full bg-accent text-lg"
         >
-          {verified ? "✓" : "→"}
+          {verified ? "Yes" : "Go"}
         </span>
       </button>
       <p className="mt-4 min-h-6 font-mono text-xs text-white/60" aria-live="polite">
