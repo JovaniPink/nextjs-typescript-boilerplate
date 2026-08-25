@@ -50,7 +50,8 @@ products that need them, not in the starter.
 - Add `"use client"` only at explicit interactive boundaries.
 - Keep TypeScript strict and use the `@/*` import alias for application code.
 - Keep `@types/node` on the latest Node 22 line while Node 22 is the oldest supported
-  runtime; do not type against APIs unavailable at the lower bound.
+  runtime; do not type against APIs unavailable at the lower bound. Preserve Renovate's
+  `helpers:disableTypesNodeMajor` guard until that runtime floor advances.
 - Use Tailwind CSS v4 and semantic theme tokens from `src/app/globals.css`.
 - Prefer accessible semantic queries in tests; do not add snapshots for ordinary UI.
 - Do not add authentication, persistence, analytics, state management, or provider

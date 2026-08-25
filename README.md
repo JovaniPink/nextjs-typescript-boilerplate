@@ -49,7 +49,8 @@ boundary.
 
 The TypeScript environment intentionally uses the latest Node 22 type definitions. That
 keeps code from compiling against a Node 24-only API while the starter still claims Node
-22 support.
+22 support. Renovate disables `@types/node` major updates so automation cannot move the
+compile-time API ceiling ahead of the oldest supported runtime.
 
 ### ESLint compatibility boundary
 
