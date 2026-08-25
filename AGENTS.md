@@ -63,6 +63,9 @@ products that need them, not in the starter.
   through Corepack so hooks cannot fall back to a global client or registry download.
 - Keep setup-node package-manager caching disabled while strict npm `devEngines` is in
   force; setup-node queries the runner's bundled npm before Corepack selects npm 12.
+- Keep the `@eslint/compat` wrapper around the complete `eslint-config-next`
+  configuration until its bundled plugins support ESLint 10 natively. Do not silence or
+  remove rules to make a lint major upgrade pass.
 - Follow [`docs/coding-agents.md`](docs/coding-agents.md) when extending agent
   instructions and [`docs/publication-safety.md`](docs/publication-safety.md) before
   deriving a public artifact from another workspace or non-public source.

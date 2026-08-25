@@ -11,7 +11,7 @@ deployment provider.
 - Strict TypeScript with a TypeScript 7 native CLI check and a TypeScript 6
   compatibility check
 - Tailwind CSS 4 with CSS-first theme tokens
-- ESLint 9 flat config and Prettier 3
+- ESLint 10 flat config and Prettier 3
 - Jest 30, Testing Library, semantic component tests, and a route-handler contract test
 - One complete `test-all` quality gate for local work and CI
 - GitHub Actions on Node 22 and Node 24
@@ -53,12 +53,13 @@ keeps code from compiling against a Node 24-only API while the starter still cla
 
 ### ESLint compatibility boundary
 
-ESLint intentionally remains on 9.39.5. As verified on 2026-08-21, the latest
-[`eslint-plugin-react` 7.37.5](https://www.npmjs.com/package/eslint-plugin-react/v/7.37.5)
-peer contract supports ESLint only through the 9.x line, and Next.js 16.3.1's lint
-configuration still depends on that plugin family. An ESLint 10 trial reaches the plugin
-but fails while loading its React rules. Do not hide that incompatibility with peer
-overrides; track the upstream-compatible migration in
+ESLint 10 runs through ESLint's official compatibility utility while the plugins bundled
+by `eslint-config-next` still use rule APIs removed in ESLint 10 and declare peer
+support only through ESLint 9. The compatibility wrapper preserves the complete React,
+hooks, import, accessibility, Next.js, and TypeScript rule configuration; it is not a
+suppression and does not rewrite peer metadata. Clean installs will continue to report
+the upstream peer-range mismatch until those packages publish native ESLint 10 support.
+Track removal of this transition layer in
 [issue #211](https://github.com/JovaniPink/nextjs-typescript-boilerplate/issues/211).
 
 Git hooks follow the same contract: pre-commit runs the already-installed `lint-staged`
