@@ -20,7 +20,8 @@ deployment provider.
 - Husky and lint-staged for fast, scoped local feedback
 - Production and full dependency audit commands
 - Integrity-pinned npm 12 with fail-closed dependency install scripts
-- Renovate with grouped non-major updates and explicit approval for majors
+- Renovate with grouped non-major updates, explicit approval for majors, and role-aware
+  TypeScript update lanes
 - Version-matched Next.js documentation guidance for coding agents
 
 ## Requirements
@@ -51,6 +52,15 @@ The TypeScript environment intentionally uses the latest Node 22 type definition
 keeps code from compiling against a Node 24-only API while the starter still claims Node
 22 support. Renovate disables `@types/node` major updates so automation cannot move the
 compile-time API ceiling ahead of the oldest supported runtime.
+
+### TypeScript compatibility boundary
+
+The two TypeScript packages have different jobs. `@typescript/native` provides the
+TypeScript 7 native CLI used by the primary type check. The unaliased `typescript`
+package stays on TypeScript 6 because Next.js and TypeScript-aware tooling still consume
+its JavaScript API. Renovate matches those dependency names separately so an automated
+major update cannot collapse the two roles. `corepack npm run toolchain:check` verifies
+the installed compiler majors, commands, and automation policy together.
 
 ### ESLint compatibility boundary
 

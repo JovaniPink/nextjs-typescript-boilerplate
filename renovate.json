@@ -10,6 +10,18 @@
       "description": "Require compatibility review for every major update",
       "matchUpdateTypes": ["major"],
       "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Keep the programmatic TypeScript API on the 6.x compatibility line",
+      "matchManagers": ["npm"],
+      "matchDepNames": ["typescript"],
+      "allowedVersions": "<7"
+    },
+    {
+      "description": "Keep the aliased native TypeScript CLI on the 7.x line",
+      "matchManagers": ["npm"],
+      "matchDepNames": ["@typescript/native"],
+      "allowedVersions": ">=7 <8"
     }
   ]
 }
