@@ -23,6 +23,8 @@ deployment provider.
 - Renovate with grouped non-major updates, explicit approval for majors, and role-aware
   TypeScript update lanes
 - Version-matched Next.js documentation guidance for coding agents
+- A checksummed knowledge-contract adapter and accessible, themeable evidence
+  presentation primitives
 
 ## Requirements
 
@@ -95,27 +97,35 @@ actually needs.
 
 The [application pattern guide](docs/README.md) distills reusable conventions for
 application architecture, forms, XState workflows, coding agents, and safe public
-publication. These are opt-in product patterns, not dependencies installed by the
-starter.
+publication. These are opt-in product patterns. The knowledge adapter is the one
+included runtime pattern and uses pinned Zod validation; the other guides do not install
+product dependencies.
+
+The optional [knowledge-system guide](docs/knowledge-system.md) documents how to vendor
+the shared public-safe schema, validate knowledge objects with Zod, build semantic
+metadata, and present sources, limitations, forecasts, corrections, and retrospectives
+without selecting a shared database, CMS, analytics product, or deployment provider.
 
 ## Canonical commands
 
-| Command                               | Purpose                                                  |
-| ------------------------------------- | -------------------------------------------------------- |
-| `corepack npm run dev`                | Start the local development server                       |
-| `corepack npm run build`              | Create the production build                              |
-| `corepack npm start`                  | Serve the production build                               |
-| `corepack npm run lint`               | Run ESLint                                               |
-| `corepack npm run format:check`       | Verify formatting without changing files                 |
-| `corepack npm run starter:check`      | Verify install and generated-route contracts             |
-| `corepack npm run toolchain:check`    | Verify the dual TypeScript compiler contract             |
-| `corepack npm run typecheck`          | Generate route types and check with TypeScript 7         |
-| `corepack npm run typecheck:compat`   | Generate route types and check with TypeScript 6         |
-| `corepack npm test`                   | Run the Jest suite                                       |
-| `corepack npm run test:ci`            | Run deterministic tests with coverage                    |
-| `corepack npm run test-all`           | Run formatting, lint, types, tests, and production build |
-| `corepack npm run audit:production`   | Audit runtime dependencies at high severity              |
-| `corepack npm run audit:dependencies` | Audit the complete dependency graph at high severity     |
+| Command                               | Purpose                                                   |
+| ------------------------------------- | --------------------------------------------------------- |
+| `corepack npm run dev`                | Start the local development server                        |
+| `corepack npm run build`              | Create the production build                               |
+| `corepack npm start`                  | Serve the production build                                |
+| `corepack npm run lint`               | Run ESLint                                                |
+| `corepack npm run format:check`       | Verify formatting without changing files                  |
+| `corepack npm run starter:check`      | Verify install and generated-route contracts              |
+| `corepack npm run knowledge:check`    | Verify the vendored knowledge schema and SHA-256 manifest |
+| `corepack npm run knowledge:sync`     | Adopt an explicitly selected reviewed schema artifact     |
+| `corepack npm run toolchain:check`    | Verify the dual TypeScript compiler contract              |
+| `corepack npm run typecheck`          | Generate route types and check with TypeScript 7          |
+| `corepack npm run typecheck:compat`   | Generate route types and check with TypeScript 6          |
+| `corepack npm test`                   | Run the Jest suite                                        |
+| `corepack npm run test:ci`            | Run deterministic tests with coverage                     |
+| `corepack npm run test-all`           | Run formatting, lint, types, tests, and production build  |
+| `corepack npm run audit:production`   | Audit runtime dependencies at high severity               |
+| `corepack npm run audit:dependencies` | Audit the complete dependency graph at high severity      |
 
 ## Project shape
 
@@ -123,6 +133,8 @@ starter.
 src/
   app/                 App Router layouts, pages, styles, and route handlers
   components/          Reusable UI with explicit client boundaries
+  features/knowledge/  Optional knowledge types, metadata, and presentation
+public/contracts/      Checksummed public-safe contract snapshots
 docs/                  Optional application patterns and publication guidance
 test/
   api/                 Route-handler contracts

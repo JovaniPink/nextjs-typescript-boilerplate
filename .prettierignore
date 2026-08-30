@@ -3,3 +3,4 @@ coverage/
 node_modules/
 package-lock.json
 next-env.d.ts
+public/contracts/knowledge-object.v1.schema.json
