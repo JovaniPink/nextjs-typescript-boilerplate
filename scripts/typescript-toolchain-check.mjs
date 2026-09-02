@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
 
 const rootUrl = new URL("../", import.meta.url);
 
@@ -18,6 +19,25 @@ const [project, nativeCompiler, compatibilityCompiler, renovate] = await Promise
 ]);
 
 const failures = [];
+const expectedNpmVersion = project.devEngines?.packageManager?.version;
+const npmExecutable = process.env.npm_execpath;
+
+if (!npmExecutable || expectedNpmVersion !== "12.0.2") {
+  failures.push(
+    "package metadata and the active npm executable must identify npm 12.0.2",
+  );
+} else {
+  const activeNpm = spawnSync(process.execPath, [npmExecutable, "--version"], {
+    encoding: "utf8",
+  });
+  const activeNpmVersion = activeNpm.stdout.trim();
+
+  if (activeNpm.status !== 0 || activeNpmVersion !== expectedNpmVersion) {
+    failures.push(
+      `active npm must be ${expectedNpmVersion}; found ${activeNpmVersion || `exit ${activeNpm.status}`}`,
+    );
+  }
+}
 
 const expectedRenovateRules = {
   "@typescript/native": ">=7 <8",
@@ -70,6 +90,6 @@ if (failures.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `TypeScript toolchain contract passed: CLI ${nativeCompiler.version}; API ${compatibilityCompiler.version}; Renovate lanes 2.`,
+    `Toolchain contract passed: npm ${expectedNpmVersion}; TypeScript CLI ${nativeCompiler.version}; API ${compatibilityCompiler.version}; Renovate lanes 2.`,
   );
 }

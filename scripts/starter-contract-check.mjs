@@ -24,6 +24,16 @@ const requiredGeneratedTypes = [".next/types/**/*.ts", ".next/dev/types/**/*.ts"
 const includedPaths = new Set(tsconfig.include ?? []);
 const excludedPaths = new Set(tsconfig.exclude ?? []);
 
+if (project.devEngines?.runtime?.onFail !== "error") {
+  failures.push("devEngines.runtime.onFail must remain error");
+}
+
+if (project.devEngines?.packageManager?.onFail !== "warn") {
+  failures.push(
+    "devEngines.packageManager.onFail must be warn so a host's bundled npm can bootstrap the integrity-pinned npm release",
+  );
+}
+
 for (const generatedTypePath of requiredGeneratedTypes) {
   if (!includedPaths.has(generatedTypePath)) {
     failures.push(`tsconfig.json must include ${generatedTypePath}`);
