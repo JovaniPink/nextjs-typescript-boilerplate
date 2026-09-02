@@ -141,6 +141,8 @@ async function makeRepository(profile) {
   } else if (profile === "monorepo-hybrid") {
     apps = ["apps/web"];
     pkg.workspaces = ["apps/*"];
+    pkg.scripts.check = pkg.scripts["test-all"];
+    pkg.scripts["test-all"] = "npm run check";
     const appPackage = {
       name: "@fixture/web",
       private: true,
@@ -151,12 +153,11 @@ async function makeRepository(profile) {
     await addApp(root, "apps/web", appPackage);
   } else if (profile === "vinext") {
     const vinext = basePackage();
-    delete vinext.devDependencies["@typescript/native"];
-    vinext.dependencies.next = "16.3.0";
+    vinext.dependencies.next = "16.3.3";
     vinext.dependencies.vinext = "1.0.0-beta.6";
-    vinext.devDependencies.typescript = "5.9.3";
+    vinext.devDependencies.typescript = "6.0.3";
     vinext.devDependencies.eslint = "9.39.5";
-    vinext.devDependencies["eslint-config-next"] = "16.3.0";
+    vinext.devDependencies["eslint-config-next"] = "16.3.3";
     delete vinext.scripts["toolchain:check"];
     delete vinext.scripts["typecheck:compat"];
     vinext.scripts.dev = "vite";

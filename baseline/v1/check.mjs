@@ -334,6 +334,18 @@ function hasScriptReference(script, name) {
   return new RegExp(`(?:npm|corepack npm) run ${escaped}(?:\\s|$)`, "u").test(script);
 }
 
+function scriptTransitivelyReferences(scripts, entry, target, visited = new Set()) {
+  if (visited.has(entry) || typeof scripts[entry] !== "string") return false;
+  visited.add(entry);
+  if (hasScriptReference(scripts[entry], target)) return true;
+  return Object.keys(scripts).some(
+    (candidate) =>
+      candidate !== entry &&
+      hasScriptReference(scripts[entry], candidate) &&
+      scriptTransitivelyReferences(scripts, candidate, target, visited),
+  );
+}
+
 function compareSemanticVersions(left, right) {
   const leftMatch = semanticVersionPattern.exec(left);
   const rightMatch = semanticVersionPattern.exec(right);
@@ -656,8 +668,9 @@ export async function checkRepository({
   const testAll = scripts["test-all"] ?? "";
   for (const scriptName of ["format:check", "lint", "typecheck", "test", "build"]) {
     const isReferenced =
-      hasScriptReference(testAll, scriptName) ||
-      (scriptName === "test" && hasScriptReference(testAll, "test:ci"));
+      scriptTransitivelyReferences(scripts, "test-all", scriptName) ||
+      (scriptName === "test" &&
+        scriptTransitivelyReferences(scripts, "test-all", "test:ci"));
     record(
       "quality-scripts",
       isReferenced,
@@ -668,7 +681,7 @@ export async function checkRepository({
     for (const scriptName of ["toolchain:check", "typecheck:compat"]) {
       record(
         "typescript-toolchain",
-        hasScriptReference(testAll, scriptName),
+        scriptTransitivelyReferences(scripts, "test-all", scriptName),
         `scripts.test-all must invoke ${scriptName}`,
       );
     }
@@ -682,13 +695,19 @@ export async function checkRepository({
     "24",
     "corepack npm install-scripts ls",
     "corepack npm run test-all",
-    "corepack npm run audit:production",
-    "corepack npm run audit:dependencies",
   ]) {
     record(
       "ci-coverage",
       workflows.includes(token),
       `hosted workflows must contain ${token}`,
+    );
+  }
+  for (const auditScript of ["audit:production", "audit:dependencies"]) {
+    record(
+      "ci-coverage",
+      workflows.includes(`corepack npm run ${auditScript}`) ||
+        scriptTransitivelyReferences(scripts, "test-all", auditScript),
+      `hosted workflows or scripts.test-all must invoke ${auditScript}`,
     );
   }
 
@@ -736,7 +755,7 @@ export async function checkRepository({
       "profile-static",
       Boolean(
         artifactScript &&
-        (hasScriptReference(testAll, artifactScript) ||
+        (scriptTransitivelyReferences(scripts, "test-all", artifactScript) ||
           hasScriptReference(scripts.build ?? "", artifactScript)),
       ),
       "stock-static applications must verify the generated static artifact",
