@@ -28,6 +28,6 @@ jobs:
           persist-credentials: false
 
       - name: Verify pinned baseline and scheduled currency
-        uses: JovaniPink/nextjs-typescript-boilerplate/baseline/v1@4a698a43f70f14daba6553157190686d445ccdbc
+        uses: JovaniPink/nextjs-typescript-boilerplate/baseline/v1@e8a000d6dda19c41eb4fe96463ca6df780f8dd9e
         with:
           check-latest: ${{ github.event_name == 'schedule' }}
