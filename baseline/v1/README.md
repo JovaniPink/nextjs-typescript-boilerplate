@@ -46,3 +46,8 @@ node --test baseline/v1/test/check.test.mjs
 The caller workflow must check out with `persist-credentials: false`, use
 `contents: read`, and pin `JovaniPink/nextjs-typescript-boilerplate/baseline/v1` to a
 full commit SHA. Only scheduled runs set `check-latest: true`.
+
+Weekly schedules are deterministically staggered from the repository name: interpret the
+first three bytes of its SHA-256 digest as unsigned integers, then use byte one modulo
+60 for the minute, byte two modulo 24 for the UTC hour, and byte three modulo 7 for the
+weekday.

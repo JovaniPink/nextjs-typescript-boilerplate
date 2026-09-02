@@ -51,6 +51,7 @@
     "format:check": "prettier --check .",
     "generate:favicon": "node scripts/generate-favicon.mjs",
     "generate:favicon:check": "node scripts/generate-favicon.mjs --check",
+    "baseline:check": "node baseline/v1/check.mjs --repository-root . --manifest .github/nextjs-baseline.json",
     "baseline:test": "node --test baseline/v1/test/check.test.mjs",
     "starter:check": "corepack npm run generate:favicon:check && node scripts/starter-contract-check.mjs",
     "toolchain:check": "node scripts/typescript-toolchain-check.mjs",
@@ -59,7 +60,7 @@
     "test": "jest --watchman=false",
     "test:watch": "jest --watch --watchman=false",
     "test:ci": "jest --runInBand --coverage --watchman=false",
-    "test-all": "corepack npm run format:check && corepack npm run lint && corepack npm run baseline:test && corepack npm run starter:check && corepack npm run toolchain:check && corepack npm run typecheck && corepack npm run typecheck:compat && corepack npm run test:ci && corepack npm run build",
+    "test-all": "corepack npm run format:check && corepack npm run lint && corepack npm run baseline:test && corepack npm run baseline:check && corepack npm run starter:check && corepack npm run toolchain:check && corepack npm run typecheck && corepack npm run typecheck:compat && corepack npm run test:ci && corepack npm run build",
     "audit:production": "corepack npm audit --omit=dev --audit-level=high",
     "audit:dependencies": "corepack npm audit --audit-level=high",
     "prepare": "node scripts/prepare.mjs"
