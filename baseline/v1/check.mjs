@@ -629,7 +629,7 @@ export async function checkRepository({
       `${dependency} must equal ${framework[dependency]}`,
     );
   }
-  if (profile.family === "stock") {
+  if (profile.family !== "vinext") {
     record(
       "typescript-toolchain",
       packageVersion(rootPackage, "@typescript/native") ===

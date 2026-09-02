@@ -140,6 +140,7 @@ async function makeRepository(profile) {
     await addApp(root, ".", pkg);
   } else if (profile === "monorepo-hybrid") {
     apps = ["apps/web"];
+    pkg.devDependencies.eslint = "9.39.5";
     pkg.workspaces = ["apps/*"];
     pkg.scripts.check = pkg.scripts["test-all"];
     pkg.scripts["test-all"] = "npm run check";

@@ -28,6 +28,11 @@ following paths outside the checkout.
 - `vinext`: the supported Vite/Vinext/Nitro compatibility boundary with
   packaged-artifact tests.
 
+The hybrid profile preserves ESLint 9.39.5 while its workspace compatibility gate
+requires that line; it still requires the stock Next.js, React, and dual-TypeScript
+versions. This is a profile constraint, not an exception that callers can silently
+remove.
+
 ## Caller manifest
 
 Store `.github/nextjs-baseline.json` in the caller. The schema is
