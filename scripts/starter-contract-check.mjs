@@ -13,6 +13,13 @@ const [project, tsconfig] = await Promise.all([
 ]);
 
 const failures = [];
+const requiredMetadataFiles = [
+  "src/app/favicon.ico",
+  "src/app/icon0.tsx",
+  "src/app/icon1.tsx",
+  "src/app/apple-icon.tsx",
+  "src/app/manifest.ts",
+];
 const requiredGeneratedTypes = [".next/types/**/*.ts", ".next/dev/types/**/*.ts"];
 const includedPaths = new Set(tsconfig.include ?? []);
 const excludedPaths = new Set(tsconfig.exclude ?? []);
@@ -25,6 +32,33 @@ for (const generatedTypePath of requiredGeneratedTypes) {
 
 if (excludedPaths.has(".next") || excludedPaths.has(".next/**")) {
   failures.push("tsconfig.json must not exclude generated .next route validators");
+}
+
+for (const metadataFile of requiredMetadataFiles) {
+  try {
+    await readFile(new URL(metadataFile, rootUrl));
+  } catch {
+    failures.push(`starter metadata contract requires ${metadataFile}`);
+  }
+}
+
+try {
+  const favicon = await readFile(new URL("src/app/favicon.ico", rootUrl));
+  const isIco =
+    favicon.length >= 22 &&
+    favicon.readUInt16LE(0) === 0 &&
+    favicon.readUInt16LE(2) === 1 &&
+    favicon.readUInt16LE(4) >= 1;
+  const firstWidth = favicon[6] === 0 ? 256 : favicon[6];
+  const firstHeight = favicon[7] === 0 ? 256 : favicon[7];
+
+  if (!isIco || firstWidth < 48 || firstHeight < 48) {
+    failures.push(
+      "src/app/favicon.ico must be a valid icon with at least one 48x48 representation",
+    );
+  }
+} catch {
+  // The required-file failure above already explains a missing favicon.
 }
 
 const expectedPrepareScript = "node scripts/prepare.mjs";
@@ -67,6 +101,6 @@ if (failures.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    "Starter contract passed: production installs skip Git hooks and generated route validators remain typechecked.",
+    "Starter contract passed: metadata assets exist, production installs skip Git hooks, and generated route validators remain typechecked.",
   );
 }

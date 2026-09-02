@@ -23,6 +23,7 @@ deployment provider.
 - Renovate with grouped non-major updates, explicit approval for majors, and role-aware
   TypeScript update lanes
 - Version-matched Next.js documentation guidance for coding agents
+- A deterministic favicon, browser/device icon family, and web manifest baseline
 
 ## Requirements
 
@@ -90,6 +91,17 @@ Open [http://localhost:3000](http://localhost:3000). The health contract is avai
 For a new product, replace the package metadata, page content, and site metadata first.
 Keep the quality gate intact while adding only the domain dependencies the product
 actually needs.
+
+### Product identity contract
+
+Replace the starter `N/` mark with a reviewed, product-specific mark before launch while
+preserving the route contract: `/favicon.ico`, `/icon0` (48x48 PNG), `/icon1` (192x192
+PNG), `/apple-icon` (180x180 PNG), and `/manifest.webmanifest`. Keep the icon bytes
+deterministic and independent of live application data. Public marketing properties
+should also provide branded 1200x630 Open Graph imagery and large-card Twitter metadata.
+After changing the reviewed SVG and matching generator geometry, regenerate the
+committed starter fallback with `corepack npm run generate:favicon`; the canonical gate
+fails if its bytes drift from the generator.
 
 ## Application patterns
 
