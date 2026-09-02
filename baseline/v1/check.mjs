@@ -288,6 +288,35 @@ async function findFirstExisting(root, paths, boundary = root) {
   return null;
 }
 
+async function containsAppRouterPage(appRoot, appDirectory) {
+  const queue = [{ path: join(appRoot, appDirectory), depth: 0 }];
+  let visitedEntries = 0;
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    const entries = await readdir(current.path, { withFileTypes: true });
+    entries.sort((left, right) => left.name.localeCompare(right.name));
+    for (const entry of entries) {
+      visitedEntries += 1;
+      if (visitedEntries > 4096) {
+        throw new BaselineInputError(
+          "App Router inspection exceeds 4096 directory entries",
+        );
+      }
+      if (entry.isFile() && /^page\.(?:tsx?|jsx?)$/u.test(entry.name)) return true;
+      if (
+        entry.isDirectory() &&
+        current.depth < 16 &&
+        entry.name !== "node_modules" &&
+        !entry.name.startsWith(".")
+      ) {
+        queue.push({ path: join(current.path, entry.name), depth: current.depth + 1 });
+      }
+    }
+  }
+  return false;
+}
+
 async function readWorkflowText(repositoryRoot, maximumBytes) {
   const workflowsRoot = join(repositoryRoot, ".github", "workflows");
   let entries;
@@ -469,12 +498,6 @@ export async function checkRepository({
     manifest.projectRoot,
     "projectRoot",
   );
-  const rootPackagePath = await resolveWithin(
-    projectRoot,
-    "package.json",
-    "project package.json",
-  );
-  const rootPackage = await readJson(rootPackagePath, 1048576, "project package.json");
   const profile = spec.profiles[manifest.profile];
   const framework = spec.frameworks[profile.family];
   const findings = [];
@@ -498,6 +521,22 @@ export async function checkRepository({
     applications.push({ appPath, appRoot, packageJson });
   }
 
+  const rootPackageName = await findFirstExisting(projectRoot, ["package.json"]);
+  if (
+    !rootPackageName &&
+    (profile.deployment !== "hybrid" || applications.length !== 1)
+  ) {
+    throw new BaselineInputError("project package.json does not exist: package.json");
+  }
+  const packageControlRoot = rootPackageName ? projectRoot : applications[0].appRoot;
+  const rootPackage = rootPackageName
+    ? await readJson(
+        join(projectRoot, rootPackageName),
+        1048576,
+        "project package.json",
+      )
+    : applications[0].packageJson;
+
   for (const application of applications) {
     const appDirectory = await findFirstExisting(application.appRoot, [
       "src/app",
@@ -512,13 +551,8 @@ export async function checkRepository({
         ])
       : null;
     const hasPage = appDirectory
-      ? await findFirstExisting(application.appRoot, [
-          `${appDirectory}/page.tsx`,
-          `${appDirectory}/page.ts`,
-          `${appDirectory}/page.jsx`,
-          `${appDirectory}/page.js`,
-        ])
-      : null;
+      ? await containsAppRouterPage(application.appRoot, appDirectory)
+      : false;
     record(
       "app-router",
       Boolean(appDirectory && hasLayout && hasPage),
@@ -603,11 +637,13 @@ export async function checkRepository({
     `packageManager must integrity-pin npm ${spec.packageManager.version}`,
   );
   let lockfileValid = false;
-  const lockfileName = await findFirstExisting(projectRoot, ["package-lock.json"]);
+  const lockfileName = await findFirstExisting(packageControlRoot, [
+    "package-lock.json",
+  ]);
   if (lockfileName) {
     try {
       const lockfile = await readJson(
-        join(projectRoot, lockfileName),
+        join(packageControlRoot, lockfileName),
         20 * 1024 * 1024,
         "package-lock.json",
       );
@@ -622,9 +658,14 @@ export async function checkRepository({
     "package-lock.json must use lockfileVersion 3",
   );
 
-  for (const dependency of ["typescript", "eslint", "eslint-config-next"]) {
+  record(
+    "typescript-toolchain",
+    packageVersion(rootPackage, "typescript") === framework.typescript,
+    `typescript must equal ${framework.typescript}`,
+  );
+  for (const dependency of ["eslint", "eslint-config-next"]) {
     record(
-      dependency === "typescript" ? "typescript-toolchain" : "framework-versions",
+      "eslint-toolchain",
       packageVersion(rootPackage, dependency) === framework[dependency],
       `${dependency} must equal ${framework[dependency]}`,
     );
@@ -770,7 +811,7 @@ export async function checkRepository({
   } else if (profile.deployment === "hybrid") {
     record(
       "profile-hybrid",
-      Array.isArray(rootPackage.workspaces) &&
+      (rootPackageName ? Array.isArray(rootPackage.workspaces) : true) &&
         manifest.nextApps.every((app) => app !== ".") &&
         applications.every((app) => isWithin(projectRoot, app.appRoot)),
       "monorepo-hybrid applications must be declared workspace roots below projectRoot",

@@ -104,7 +104,11 @@
     },
     {
       "id": "framework-versions",
-      "description": "Framework packages match the profile's exact compatibility set."
+      "description": "Next.js and React packages match the profile's exact compatibility set."
+    },
+    {
+      "id": "eslint-toolchain",
+      "description": "ESLint and its Next.js integration match the profile's exact compatibility set."
     },
     {
       "id": "typescript-toolchain",

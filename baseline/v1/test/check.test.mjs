@@ -304,6 +304,17 @@ test("detects App Router and static/server profile mismatches", async () => {
   );
 });
 
+test("accepts a page nested below an App Router route group", async () => {
+  const root = await makeRepository("stock-server");
+  await mkdir(join(root, "src", "app", "(marketing)"), { recursive: true });
+  await writeFile(
+    join(root, "src", "app", "(marketing)", "page.tsx"),
+    "export default function Page() {}\n",
+  );
+  await unlink(join(root, "src", "app", "page.tsx"));
+  assert.equal((await verify(root)).passed, true);
+});
+
 test("detects Vinext replacement and monorepo application-root violations", async () => {
   const vinextRoot = await makeRepository("vinext");
   const vinextPath = join(vinextRoot, "package.json");
@@ -323,6 +334,46 @@ test("detects Vinext replacement and monorepo application-root violations", asyn
   );
   const report = await verify(hybridRoot);
   assert.ok(report.failures.some((finding) => finding.ruleId === "profile-hybrid"));
+});
+
+test("accepts a Python-first hybrid repository with one app-scoped package", async () => {
+  const root = await makeRepository("monorepo-hybrid");
+  const packagePath = join(root, "package.json");
+  const pkg = JSON.parse(await readFile(packagePath, "utf8"));
+  delete pkg.workspaces;
+  await writeJson(join(root, "apps", "web", "package.json"), pkg);
+  await writeJson(join(root, "apps", "web", "package-lock.json"), {
+    lockfileVersion: 3,
+  });
+  await unlink(packagePath);
+  await unlink(join(root, "package-lock.json"));
+  assert.equal((await verify(root)).passed, true);
+});
+
+test("an ESLint exception cannot hide framework-version drift", async () => {
+  const root = await makeRepository("stock-server");
+  const packagePath = join(root, "package.json");
+  const pkg = JSON.parse(await readFile(packagePath, "utf8"));
+  pkg.devDependencies.eslint = "9.39.5";
+  await writeJson(packagePath, pkg);
+  const manifestPath = join(root, ".github", "nextjs-baseline.json");
+  const value = manifest("stock-server");
+  value.exceptions = [
+    {
+      ruleId: "eslint-toolchain",
+      reason: "Compatibility migration is tracked by the linked repository issue",
+      issueUrl: "https://github.com/JovaniPink/fixture/issues/2",
+      reviewAfter: "2026-12-01",
+    },
+  ];
+  await writeJson(manifestPath, value);
+  assert.equal((await verify(root)).passed, true);
+
+  pkg.dependencies.next = "latest";
+  await writeJson(packagePath, pkg);
+  const report = await verify(root);
+  assert.equal(report.passed, false);
+  assert.ok(report.failures.some((finding) => finding.ruleId === "framework-versions"));
 });
 
 test("allows stronger product-specific gates", async () => {

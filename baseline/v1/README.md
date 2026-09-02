@@ -33,6 +33,16 @@ requires that line; it still requires the stock Next.js, React, and dual-TypeScr
 versions. This is a profile constraint, not an exception that callers can silently
 remove.
 
+A hybrid repository may keep its JavaScript package boundary at the one declared Next.js
+application root when the repository root belongs to another runtime. In that case the
+app package and lockfile are the Node control surface, while CI is still read from the
+repository root. App Router pages may live below route groups; the root layout must
+remain at the App Router boundary.
+
+Framework, TypeScript, and ESLint findings use separate rule identifiers so a temporary
+ESLint compatibility exception cannot suppress drift in Next.js, React, or either
+TypeScript compiler.
+
 ## Caller manifest
 
 Store `.github/nextjs-baseline.json` in the caller. The schema is
