@@ -11,13 +11,14 @@ identifiers, production configuration, customer information, or credentials.
 
 ## Guides
 
-| Guide                                                   | Use it when                                               |
-| ------------------------------------------------------- | --------------------------------------------------------- |
-| [Application architecture](application-architecture.md) | Deciding where routes, state, contracts, and effects live |
-| [Forms](forms.md)                                       | Adding validated, accessible, failure-aware forms         |
-| [XState](xstate.md)                                     | Modeling a workflow with meaningful states and events     |
-| [Coding agents](coding-agents.md)                       | Defining safe repository-local instructions for agents    |
-| [Publication safety](publication-safety.md)             | Preparing code or documentation for a public repository   |
+| Guide                                                           | Use it when                                                  |
+| --------------------------------------------------------------- | ------------------------------------------------------------ |
+| [Application architecture](application-architecture.md)         | Deciding where routes, state, contracts, and effects live    |
+| [Forms](forms.md)                                               | Adding validated, accessible, failure-aware forms            |
+| [XState](xstate.md)                                             | Modeling a workflow with meaningful states and events        |
+| [Coding agents](coding-agents.md)                               | Defining safe repository-local instructions for agents       |
+| [Static evidence presentation](static-evidence-presentation.md) | Explaining evidence with optional, interruptible interaction |
+| [Publication safety](publication-safety.md)                     | Preparing code or documentation for a public repository      |
 
 ## How to use these patterns
 
