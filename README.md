@@ -35,8 +35,10 @@ The repository includes an `.nvmrc` for the oldest supported runtime. CI validat
 Node 22 and Node 24. `package.json` pins npm 12.0.2 with an integrity digest and uses
 npm's
 [`devEngines`](https://docs.npmjs.com/cli/v12/configuring-npm/package-json/#devengines)
-contract to reject unsupported Node or npm versions before install, CI, and run
-commands.
+contract to reject unsupported Node versions. A package-manager mismatch warns during
+bootstrap because some managed build hosts must use their bundled npm once to install
+the pinned release. Every repository command and CI job still uses Corepack, and the
+toolchain contract verifies the exact installed npm release before validation.
 
 npm 12 blocks unreviewed dependency install scripts. This starter explicitly denies the
 two optional native scripts in the current graph because the complete type, test, and
@@ -45,9 +47,10 @@ unreviewed install script into a clean-install failure.
 
 CI explicitly disables `actions/setup-node`'s automatic package-manager cache. That
 cache queries the runner's bundled npm before Corepack selects the declared npm 12
-release, which conflicts with the fail-closed `devEngines` contract. The workflow
-instead treats a clean install from the committed lockfile as the reproducibility
-boundary.
+release. The workflow instead treats the integrity pin, exact toolchain check, and clean
+install from the committed lockfile as the reproducibility boundary. Managed hosts that
+select npm through an environment setting must select `12.0.2`; the warning exists only
+to let the host complete that one-time package-manager bootstrap.
 
 The TypeScript environment intentionally uses the latest Node 22 type definitions. That
 keeps code from compiling against a Node 24-only API while the starter still claims Node
