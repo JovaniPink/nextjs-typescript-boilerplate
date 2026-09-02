@@ -1,0 +1,140 @@
+{
+  "schemaVersion": "nextjs-baseline.spec.v1",
+  "version": "1.0.0",
+  "limits": {
+    "manifestBytes": 16384,
+    "latestBytes": 4096,
+    "workflowBytes": 262144,
+    "exceptions": 32,
+    "nextApps": 8
+  },
+  "node": {
+    "range": "^22.22.2 || ^24.15.0"
+  },
+  "packageManager": {
+    "name": "npm",
+    "version": "12.0.2",
+    "integrityPattern": "^npm@12\\.0\\.2\\+sha(?:224\\.[0-9a-f]{56}|512\\.[0-9a-f]{128})$"
+  },
+  "frameworks": {
+    "stock": {
+      "next": "16.3.3",
+      "react": "19.2.8",
+      "react-dom": "19.2.8",
+      "typescript": "6.0.3",
+      "@typescript/native": "npm:typescript@7.0.2",
+      "eslint": "10.9.1",
+      "eslint-config-next": "16.3.3"
+    },
+    "vinext": {
+      "next": "16.3.0",
+      "react": "19.2.8",
+      "react-dom": "19.2.8",
+      "typescript": "5.9.3",
+      "eslint": "9.39.5",
+      "eslint-config-next": "16.3.0",
+      "vinext": "1.0.0-beta.6"
+    }
+  },
+  "profiles": {
+    "stock-static": {
+      "family": "stock",
+      "deployment": "static",
+      "requiresDualTypeScript": true
+    },
+    "stock-server": {
+      "family": "stock",
+      "deployment": "server",
+      "requiresDualTypeScript": true
+    },
+    "monorepo-hybrid": {
+      "family": "stock",
+      "deployment": "hybrid",
+      "requiresDualTypeScript": true
+    },
+    "vinext": {
+      "family": "vinext",
+      "deployment": "vinext",
+      "requiresDualTypeScript": false
+    }
+  },
+  "qualityScripts": [
+    "format:check",
+    "lint",
+    "typecheck",
+    "test",
+    "build",
+    "test-all",
+    "audit:production",
+    "audit:dependencies"
+  ],
+  "dualTypeScriptScripts": ["toolchain:check", "typecheck:compat"],
+  "staticArtifactScripts": [
+    "artifact:check",
+    "release:check",
+    "verify:static",
+    "validate:artifact"
+  ],
+  "rules": [
+    {
+      "id": "app-router",
+      "description": "Every declared Next application uses App Router."
+    },
+    {
+      "id": "strict-typescript",
+      "description": "Every declared Next application explicitly enables strict TypeScript."
+    },
+    {
+      "id": "node-support",
+      "description": "The project declares the supported Node 22 and Node 24 runtime range."
+    },
+    {
+      "id": "package-manager-integrity",
+      "description": "The npm release is versioned and integrity pinned."
+    },
+    {
+      "id": "framework-versions",
+      "description": "Framework packages match the profile's exact compatibility set."
+    },
+    {
+      "id": "typescript-toolchain",
+      "description": "The TypeScript toolchain matches the profile and dual-check policy."
+    },
+    {
+      "id": "install-script-policy",
+      "description": "Dependency install scripts have an explicit package policy."
+    },
+    {
+      "id": "quality-scripts",
+      "description": "The project exposes the minimum additive quality-gate commands."
+    },
+    {
+      "id": "ci-coverage",
+      "description": "Hosted CI covers both Node lines and the declared quality gates."
+    },
+    {
+      "id": "identity-assets",
+      "description": "The application has favicon, manifest, icon, and metadata surfaces."
+    },
+    {
+      "id": "profile-static",
+      "description": "Static applications export and verify a static artifact."
+    },
+    {
+      "id": "profile-server",
+      "description": "Server applications retain a production server build."
+    },
+    {
+      "id": "profile-hybrid",
+      "description": "Hybrid repositories isolate declared workspace application roots."
+    },
+    {
+      "id": "profile-vinext",
+      "description": "Vinext applications retain the Vite, Nitro, and artifact boundary."
+    },
+    {
+      "id": "baseline-workflow",
+      "description": "The caller-owned workflow pins the baseline action and performs scheduled currency checks."
+    }
+  ]
+}

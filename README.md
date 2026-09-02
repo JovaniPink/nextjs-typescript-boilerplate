@@ -175,6 +175,10 @@ binary. `starter:check` also prevents `.next/types` and `.next/dev/types` from b
 silently excluded after `next typegen`, so invalid App Router signatures remain part of
 both TypeScript gates.
 
+The versioned fleet-governance action and its trust boundary are documented in
+[`baseline/v1/README.md`](baseline/v1/README.md). The verifier reads caller repositories
+as inert data; it never installs dependencies or executes caller-defined commands.
+
 ## License
 
 [MIT](LICENSE.md)

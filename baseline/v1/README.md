@@ -1,0 +1,48 @@
+# Next.js fleet baseline v1
+
+This directory is the versioned, dependency-free governance contract for Measured
+Studios Next.js repositories. It verifies repository declarations and files without
+installing dependencies, executing caller scripts, importing caller modules, or
+following paths outside the checkout.
+
+## Trust boundary
+
+- `check.mjs` treats the caller manifest, package files, configs, and workflow YAML as
+  inert data.
+- Repository-relative paths are bounded; absolute paths, traversal, shell fragments,
+  duplicates, oversized documents, and out-of-root symlinks fail closed.
+- Pull-request and push checks execute a full-SHA-pinned copy of this action.
+- Scheduled checks may fetch only `latest.json` over HTTPS. The response is bounded to 4
+  KiB, parsed as strict JSON, never executed, and fails closed on network or schema
+  errors.
+- The checker is additive. Product-specific gates can be stronger and are not removed or
+  executed by this action.
+
+## Profiles
+
+- `stock-static`: App Router applications with `output: "export"` and a static-artifact
+  verifier.
+- `stock-server`: App Router applications retaining a production Next.js server build.
+- `monorepo-hybrid`: repositories with one or more isolated Next.js workspace roots plus
+  other runtimes or services.
+- `vinext`: the supported Vite/Vinext/Nitro compatibility boundary with
+  packaged-artifact tests.
+
+## Caller manifest
+
+Store `.github/nextjs-baseline.json` in the caller. The schema is
+`manifest.schema.json`. Exceptions are temporary, rule-specific, issue-backed, and
+dated. Unknown, duplicate, expired, unsafe, or unused exceptions fail.
+
+## Local verification
+
+```bash
+node baseline/v1/check.mjs \
+  --repository-root . \
+  --manifest .github/nextjs-baseline.json
+node --test baseline/v1/test/check.test.mjs
+```
+
+The caller workflow must check out with `persist-credentials: false`, use
+`contents: read`, and pin `JovaniPink/nextjs-typescript-boilerplate/baseline/v1` to a
+full commit SHA. Only scheduled runs set `check-latest: true`.
