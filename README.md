@@ -41,7 +41,7 @@ the pinned release. Every repository command and CI job still uses Corepack, and
 toolchain contract verifies the exact installed npm release before validation.
 
 npm 12 blocks unreviewed dependency install scripts. This starter explicitly denies the
-two optional native scripts in the current graph because the complete type, test, and
+dependency scripts listed in `allowScripts` because the complete type, test, and
 production-build gates pass without them. `.npmrc` turns any newly introduced,
 unreviewed install script into a clean-install failure.
 

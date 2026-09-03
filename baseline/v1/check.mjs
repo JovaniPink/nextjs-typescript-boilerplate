@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import { readFile, readdir, realpath, stat } from "node:fs/promises";
-import { dirname, isAbsolute, join, resolve, sep } from "node:path";
+import { dirname, isAbsolute, join, matchesGlob, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { hasCompleteCiCoverage } from "./workflow-coverage.mjs";
 
 const moduleRoot = dirname(fileURLToPath(import.meta.url));
 const manifestKeys = new Set([
@@ -262,6 +263,7 @@ function validateManifest(manifest, spec, ruleIds, now) {
       typeof exception.reviewAfter !== "string" ||
       !/^\d{4}-\d{2}-\d{2}$/u.test(exception.reviewAfter) ||
       Number.isNaN(reviewDate.valueOf()) ||
+      reviewDate.toISOString().slice(0, 10) !== exception.reviewAfter ||
       reviewDate <= now
     ) {
       throw new BaselineInputError(
@@ -323,7 +325,7 @@ async function readWorkflowText(repositoryRoot, maximumBytes) {
   try {
     entries = await readdir(workflowsRoot, { withFileTypes: true });
   } catch {
-    return "";
+    return [];
   }
   const texts = [];
   let totalBytes = 0;
@@ -347,7 +349,7 @@ async function readWorkflowText(repositoryRoot, maximumBytes) {
     }
     texts.push(text);
   }
-  return texts.join("\n");
+  return texts;
 }
 
 function packageVersion(packageJson, name) {
@@ -637,6 +639,7 @@ export async function checkRepository({
     `packageManager must integrity-pin npm ${spec.packageManager.version}`,
   );
   let lockfileValid = false;
+  let lockedPackages = null;
   const lockfileName = await findFirstExisting(packageControlRoot, [
     "package-lock.json",
   ]);
@@ -647,7 +650,9 @@ export async function checkRepository({
         20 * 1024 * 1024,
         "package-lock.json",
       );
-      lockfileValid = lockfile.lockfileVersion === 3;
+      lockfileValid =
+        lockfile.lockfileVersion === 3 && isPlainObject(lockfile.packages);
+      if (lockfileValid) lockedPackages = lockfile.packages;
     } catch {
       lockfileValid = false;
     }
@@ -681,12 +686,25 @@ export async function checkRepository({
 
   const scripts = rootPackage.scripts ?? {};
   const allowScripts = rootPackage.allowScripts;
+  const installScriptPackages = Object.entries(lockedPackages ?? {}).filter(
+    ([path, entry]) =>
+      path.includes("node_modules/") &&
+      isPlainObject(entry) &&
+      entry.hasInstallScript === true,
+  );
   record(
     "install-script-policy",
-    isPlainObject(allowScripts) &&
-      Object.keys(allowScripts).length > 0 &&
-      Object.values(allowScripts).every((value) => typeof value === "boolean"),
-    "allowScripts must explicitly allow or deny each reviewed install-script package",
+    lockfileValid &&
+      isPlainObject(allowScripts) &&
+      Object.values(allowScripts).every((value) => typeof value === "boolean") &&
+      installScriptPackages.every(([path, entry]) => {
+        const name = entry.name ?? path.split("node_modules/").at(-1);
+        return (
+          Object.hasOwn(allowScripts, name) ||
+          Object.hasOwn(allowScripts, name + "@" + entry.version)
+        );
+      }),
+    "allowScripts must explicitly allow or deny every locked install-script package, including optional and nested packages",
   );
 
   for (const scriptName of spec.qualityScripts) {
@@ -706,7 +724,6 @@ export async function checkRepository({
       );
     }
   }
-  const testAll = scripts["test-all"] ?? "";
   for (const scriptName of ["format:check", "lint", "typecheck", "test", "build"]) {
     const isReferenced =
       scriptTransitivelyReferences(scripts, "test-all", scriptName) ||
@@ -728,29 +745,18 @@ export async function checkRepository({
     }
   }
 
-  const workflows = await readWorkflowText(rootRealPath, spec.limits.workflowBytes);
-  for (const token of [
-    "pull_request",
-    "push:",
-    "22",
-    "24",
-    "corepack npm install-scripts ls",
-    "corepack npm run test-all",
-  ]) {
-    record(
-      "ci-coverage",
-      workflows.includes(token),
-      `hosted workflows must contain ${token}`,
-    );
-  }
-  for (const auditScript of ["audit:production", "audit:dependencies"]) {
-    record(
-      "ci-coverage",
-      workflows.includes(`corepack npm run ${auditScript}`) ||
-        scriptTransitivelyReferences(scripts, "test-all", auditScript),
-      `hosted workflows or scripts.test-all must invoke ${auditScript}`,
-    );
-  }
+  const workflowFiles = await readWorkflowText(rootRealPath, spec.limits.workflowBytes);
+  const workflows = workflowFiles.join("\n");
+  record(
+    "ci-coverage",
+    hasCompleteCiCoverage(
+      workflowFiles,
+      ["audit:production", "audit:dependencies"].filter(
+        (name) => !scriptTransitivelyReferences(scripts, "test-all", name),
+      ),
+    ),
+    "pull-request and push jobs must set up Node 22 and 24 and run the complete gate, install-script review, and both audits without conditional or tolerated failures",
+  );
 
   const baselineActionPattern =
     /JovaniPink\/nextjs-typescript-boilerplate\/baseline\/v1@[0-9a-f]{40}/u;
@@ -811,7 +817,20 @@ export async function checkRepository({
   } else if (profile.deployment === "hybrid") {
     record(
       "profile-hybrid",
-      (rootPackageName ? Array.isArray(rootPackage.workspaces) : true) &&
+      (rootPackageName
+        ? Array.isArray(rootPackage.workspaces) &&
+          rootPackage.workspaces.every((pattern) => typeof pattern === "string") &&
+          applications.every(
+            ({ appPath }) =>
+              rootPackage.workspaces.some(
+                (pattern) => !pattern.startsWith("!") && matchesGlob(appPath, pattern),
+              ) &&
+              !rootPackage.workspaces.some(
+                (pattern) =>
+                  pattern.startsWith("!") && matchesGlob(appPath, pattern.slice(1)),
+              ),
+          )
+        : true) &&
         manifest.nextApps.every((app) => app !== ".") &&
         applications.every((app) => isWithin(projectRoot, app.appRoot)),
       "monorepo-hybrid applications must be declared workspace roots below projectRoot",

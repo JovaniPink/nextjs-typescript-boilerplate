@@ -86,6 +86,9 @@ function workflow() {
     "      - uses: actions/checkout@0123456789abcdef0123456789abcdef01234567",
     "        with:",
     "          persist-credentials: false",
+    "      - uses: actions/setup-node@0123456789abcdef0123456789abcdef01234567",
+    "        with:",
+    "          node-version: $" + "{{ matrix.node-version }}",
     "      - run: corepack npm install-scripts ls",
     "      - run: corepack npm run test-all",
     "      - run: corepack npm run audit:production",
@@ -170,7 +173,15 @@ async function makeRepository(profile) {
     await writeFile(join(root, "netlify.toml"), '[build]\npublish = "dist"\n');
   }
 
-  await writeJson(join(root, "package-lock.json"), { lockfileVersion: 3 });
+  await writeJson(join(root, "package-lock.json"), {
+    lockfileVersion: 3,
+    packages: {
+      "node_modules/reviewed-native-package": {
+        version: "1.2.3",
+        hasInstallScript: true,
+      },
+    },
+  });
   await writeJson(
     join(root, ".github", "nextjs-baseline.json"),
     manifest(profile, apps),
@@ -344,6 +355,7 @@ test("accepts a Python-first hybrid repository with one app-scoped package", asy
   await writeJson(join(root, "apps", "web", "package.json"), pkg);
   await writeJson(join(root, "apps", "web", "package-lock.json"), {
     lockfileVersion: 3,
+    packages: {},
   });
   await unlink(packagePath);
   await unlink(join(root, "package-lock.json"));
@@ -384,6 +396,132 @@ test("allows stronger product-specific gates", async () => {
   pkg.scripts["test-all"] += " && npm run product:evidence";
   await writeJson(path, pkg);
   assert.equal((await verify(root)).passed, true);
+});
+
+test("requires a decision for every locked install-script package", async () => {
+  const root = await makeRepository("stock-server");
+  const packagePath = join(root, "package.json");
+  const pkg = JSON.parse(await readFile(packagePath, "utf8"));
+  await writeJson(join(root, "package-lock.json"), {
+    lockfileVersion: 3,
+    packages: {
+      "": { hasInstallScript: true },
+      "node_modules/reviewed-native-package": {
+        version: "1.2.3",
+        hasInstallScript: true,
+      },
+      "node_modules/parent/node_modules/@scope/native": {
+        version: "2.0.0",
+        hasInstallScript: true,
+        optional: true,
+        os: ["linux"],
+      },
+    },
+  });
+  assert.ok(
+    (await verify(root)).failures.some(
+      (finding) => finding.ruleId === "install-script-policy",
+    ),
+  );
+  pkg.allowScripts["@scope/native@2.0.0"] = true;
+  await writeJson(packagePath, pkg);
+  assert.equal((await verify(root)).passed, true);
+  delete pkg.allowScripts["@scope/native@2.0.0"];
+  pkg.allowScripts["@scope/native@1.0.0"] = true;
+  await writeJson(packagePath, pkg);
+  assert.ok(
+    (await verify(root)).failures.some(
+      (finding) => finding.ruleId === "install-script-policy",
+    ),
+  );
+  pkg.allowScripts = { dummy: false };
+  await writeJson(packagePath, pkg);
+  assert.ok(
+    (await verify(root)).failures.some(
+      (finding) => finding.ruleId === "install-script-policy",
+    ),
+  );
+});
+
+test("requires the complete gate on an actual Node 22 and 24 job matrix", async () => {
+  const valid = workflow();
+  for (const changed of [
+    valid.replace("[22, 24]", "[22]") + "\n# Node 24 is planned\n",
+    valid.replace("[22, 24]", "[22]") +
+      "\n  unrelated:\n    steps:\n      - run: echo Node 24\n",
+    valid.replace("$" + "{{ matrix.node-version }}", "22"),
+    valid.replace("  complete:\n", "  complete:\n    continue-on-error: true\n"),
+    valid.replace("  complete:\n", "  complete:\n    <<: *conditional-job\n"),
+    valid
+      .replace("    steps:\n", "    steps:\n      - run: corepack npm run test-all\n")
+      .replace(
+        "      - run: corepack npm run test-all\n      - run: corepack npm run audit:production",
+        "      - run: corepack npm run audit:production",
+      ),
+    valid.replace(
+      "      - run: corepack npm run test-all",
+      "      - if: false\n        run: corepack npm run test-all",
+    ),
+    valid.replace(
+      "      - run: corepack npm run test-all",
+      "      - run: echo 'corepack npm run test-all'",
+    ),
+    valid.replace(
+      "        node-version: [22, 24]",
+      "        node-version: [22, 24]\n        exclude:\n          - node-version: 24",
+    ),
+  ]) {
+    const root = await makeRepository("stock-server");
+    await writeFile(join(root, ".github", "workflows", "ci.yml"), changed);
+    assert.ok(
+      (await verify(root)).failures.some((finding) => finding.ruleId === "ci-coverage"),
+      changed,
+    );
+  }
+  const root = await makeRepository("stock-server");
+  await writeFile(
+    join(root, ".github", "workflows", "ci.yml"),
+    valid.replace(
+      "        node-version: [22, 24]",
+      '        include:\n          - node-version: "22.22.2"\n          - node-version: "24"',
+    ),
+  );
+  assert.equal((await verify(root)).passed, true);
+});
+
+test("requires each hybrid application to be a declared workspace", async () => {
+  const root = await makeRepository("monorepo-hybrid");
+  const path = join(root, "package.json");
+  const pkg = JSON.parse(await readFile(path, "utf8"));
+  for (const workspaces of [[], ["packages/*"], ["apps/*", "!apps/web"]]) {
+    pkg.workspaces = workspaces;
+    await writeJson(path, pkg);
+    assert.ok(
+      (await verify(root)).failures.some(
+        (finding) => finding.ruleId === "profile-hybrid",
+      ),
+    );
+  }
+  for (const workspaces of [["apps/web"], ["apps/*"], ["apps/**"]]) {
+    pkg.workspaces = workspaces;
+    await writeJson(path, pkg);
+    assert.equal((await verify(root)).passed, true);
+  }
+});
+
+test("rejects impossible exception dates instead of normalizing them", async () => {
+  const root = await makeRepository("stock-server");
+  const value = manifest("stock-server");
+  value.exceptions = [
+    {
+      ruleId: "node-support",
+      reason: "Temporary compatibility boundary tracked by the linked issue",
+      issueUrl: "https://github.com/JovaniPink/fixture/issues/1",
+      reviewAfter: "2027-02-31",
+    },
+  ];
+  await writeJson(join(root, ".github", "nextjs-baseline.json"), value);
+  await assert.rejects(() => verify(root), /invalid or expired/u);
 });
 
 test("validates current, outdated, malformed, oversized, and failed currency fetches", async () => {

@@ -18,6 +18,19 @@ following paths outside the checkout.
 - The checker is additive. Product-specific gates can be stronger and are not removed or
   executed by this action.
 
+Install-script decisions are checked against every dependency marked `hasInstallScript`
+in the lockfile, including nested and platform-specific optional packages. Name-only
+decisions and exact-version decisions are supported; an unrelated entry does not cover a
+dependency. See the
+[npm install-script contract](https://docs.npmjs.com/cli/v12/commands/npm-install-scripts/).
+
+CI coverage is checked within actual pull-request and push jobs: Node setup, the
+complete gate, install-script review, and both audits must belong to jobs covering Node
+22 and 24. The dependency-free reader supports literal versions, static matrix axes, and
+include-only matrices. Conditional gates, tolerated failures, aliases, dynamic matrices,
+mixed include expansion, and exclusions do not establish coverage. This checks
+declarations; successful execution still requires hosted check evidence.
+
 ## Profiles
 
 - `stock-static`: App Router applications with `output: "export"` and a static-artifact
@@ -38,6 +51,10 @@ application root when the repository root belongs to another runtime. In that ca
 app package and lockfile are the Node control surface, while CI is still read from the
 repository root. App Router pages may live below route groups; the root layout must
 remain at the App Router boundary.
+
+When the repository has a root Node package, every declared app must match its workspace
+patterns and must not match an exclusion. Merely placing an app under the repository
+root does not make it a workspace.
 
 Framework, TypeScript, and ESLint findings use separate rule identifiers so a temporary
 ESLint compatibility exception cannot suppress drift in Next.js, React, or either
