@@ -12,7 +12,11 @@ const config = {
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   testEnvironment: "jsdom",
-  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+  testPathIgnorePatterns: [
+    "<rootDir>/.next/",
+    "<rootDir>/baseline/v1/test/",
+    "<rootDir>/node_modules/",
+  ],
 };
 
 export default createJestConfig(config);

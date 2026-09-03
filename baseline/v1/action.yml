@@ -1,0 +1,30 @@
+name: Verify Next.js fleet baseline
+description:
+  Read-only, dependency-free verification of a caller's declared Next.js baseline
+  profile
+
+inputs:
+  manifest:
+    description: Repository-relative baseline manifest path
+    required: false
+    default: .github/nextjs-baseline.json
+  check-latest:
+    description:
+      Fetch inert latest-version data and fail when the pinned baseline is behind
+    required: false
+    default: "false"
+  latest-url:
+    description: HTTPS URL for the bounded latest-version JSON document
+    required: false
+    default: https://raw.githubusercontent.com/JovaniPink/nextjs-typescript-boilerplate/main/baseline/v1/latest.json
+
+runs:
+  using: composite
+  steps:
+    - name: Verify declared baseline
+      shell: bash
+      env:
+        NEXTJS_BASELINE_MANIFEST: ${{ inputs.manifest }}
+        NEXTJS_BASELINE_CHECK_LATEST: ${{ inputs.check-latest }}
+        NEXTJS_BASELINE_LATEST_URL: ${{ inputs.latest-url }}
+      run: node "$GITHUB_ACTION_PATH/check.mjs" --from-action-env
