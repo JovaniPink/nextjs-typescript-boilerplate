@@ -179,6 +179,12 @@ The versioned fleet-governance action and its trust boundary are documented in
 [`baseline/v1/README.md`](baseline/v1/README.md). The verifier reads caller repositories
 as inert data; it never installs dependencies or executes caller-defined commands.
 
+The baseline spec pins exact npm, Next.js, React, ESLint, and TypeScript releases, so
+Renovate holds those packages in two approval-gated groups, `npm package manager` and
+`Next.js baseline framework`, instead of mixing them into the grouped non-major update.
+Update `baseline/v1/spec.json` first, then approve the matching group on the dependency
+dashboard.
+
 ## License
 
 [MIT](LICENSE.md)
