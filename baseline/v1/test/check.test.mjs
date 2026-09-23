@@ -43,14 +43,14 @@ function basePackage() {
       "audit:dependencies": "npm audit --audit-level=high",
     },
     dependencies: {
-      next: "16.3.3",
-      react: "19.2.8",
-      "react-dom": "19.2.8",
+      next: "16.3.6",
+      react: "19.3.0",
+      "react-dom": "19.3.0",
     },
     devDependencies: {
       "@typescript/native": "npm:typescript@7.0.2",
-      eslint: "10.9.1",
-      "eslint-config-next": "16.3.3",
+      eslint: "10.11.0",
+      "eslint-config-next": "16.3.6",
       typescript: "6.0.3",
     },
   };
@@ -59,7 +59,7 @@ function basePackage() {
 function manifest(profile, nextApps = ["."]) {
   return {
     schemaVersion: "nextjs-baseline.manifest.v1",
-    baselineVersion: "1.0.0",
+    baselineVersion: "1.1.0",
     profile,
     projectRoot: ".",
     nextApps,
@@ -157,11 +157,11 @@ async function makeRepository(profile) {
     await addApp(root, "apps/web", appPackage);
   } else if (profile === "vinext") {
     const vinext = basePackage();
-    vinext.dependencies.next = "16.3.3";
+    vinext.dependencies.next = "16.3.6";
     vinext.dependencies.vinext = "1.0.0-beta.6";
     vinext.devDependencies.typescript = "6.0.3";
     vinext.devDependencies.eslint = "9.39.5";
-    vinext.devDependencies["eslint-config-next"] = "16.3.3";
+    vinext.devDependencies["eslint-config-next"] = "16.3.6";
     delete vinext.scripts["toolchain:check"];
     delete vinext.scripts["typecheck:compat"];
     vinext.scripts.dev = "vite";
@@ -219,6 +219,17 @@ test("rejects malformed and traversal manifests before repository inspection", a
     await readFile(new URL("traversal-manifest.json", fixtureRoot)),
   );
   await assert.rejects(() => verify(root), /bounded repository-relative path/u);
+});
+
+test("rejects a manifest pinned to a different baseline version", async () => {
+  const root = await makeRepository("stock-server");
+  const value = manifest("stock-server");
+  value.baselineVersion = "1.0.0";
+  await writeJson(join(root, ".github", "nextjs-baseline.json"), value);
+  await assert.rejects(
+    () => verify(root),
+    /pins 1\.0\.0 but this action implements 1\.1\.0/u,
+  );
 });
 
 test("rejects missing and oversized manifests", async () => {
@@ -531,13 +542,14 @@ test("validates current, outdated, malformed, oversized, and failed currency fet
   const newer = JSON.parse(
     await readFile(new URL("latest-outdated.json", fixtureRoot), "utf8"),
   );
-  assert.equal(validateLatestDocument(current, "1.0.0").latestVersion, "1.0.0");
-  assert.throws(() => validateLatestDocument(newer, "1.0.0"), /behind/u);
+  assert.equal(validateLatestDocument(current, "1.1.0").latestVersion, "1.1.0");
+  assert.throws(() => validateLatestDocument(current, "1.0.0"), /behind/u);
+  assert.throws(() => validateLatestDocument(newer, "1.1.0"), /behind/u);
   assert.throws(
     () =>
       validateLatestDocument(
-        { schemaVersion: "wrong", latestVersion: "1.0.0" },
-        "1.0.0",
+        { schemaVersion: "wrong", latestVersion: "1.1.0" },
+        "1.1.0",
       ),
     /malformed/u,
   );
