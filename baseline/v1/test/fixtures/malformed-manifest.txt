@@ -1,6 +1,6 @@
 {
   "schemaVersion": "nextjs-baseline.manifest.v1",
-  "baselineVersion": "1.0.0",
+  "baselineVersion": "1.1.0",
   "profile": "stock-server",
   "projectRoot": ".",
   "nextApps": ["."],
