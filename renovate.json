@@ -22,6 +22,28 @@
       "matchManagers": ["npm"],
       "matchDepNames": ["@typescript/native"],
       "allowedVersions": ">=7 <8"
+    },
+    {
+      "description": "Hold npm in its own approval-gated branch: packageManager, devEngines, the baseline spec, and the toolchain check pin the exact reviewed release",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["packageManager"],
+      "groupName": "npm package manager",
+      "groupSlug": "npm-package-manager",
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Hold Next.js baseline framework packages in their own approval-gated branch: baseline/v1/spec.json and .github/nextjs-baseline.json enforce the exact versions (typescript also matches the @typescript/native alias)",
+      "matchPackageNames": [
+        "next",
+        "react",
+        "react-dom",
+        "eslint",
+        "eslint-config-next",
+        "typescript"
+      ],
+      "groupName": "Next.js baseline framework",
+      "groupSlug": "nextjs-baseline-framework",
+      "dependencyDashboardApproval": true
     }
   ]
 }
