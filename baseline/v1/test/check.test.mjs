@@ -999,3 +999,18 @@ test("check-latest without a latest URL is an input error", async () => {
   );
   assert.equal(cli.status, 1, cli.stdout + cli.stderr);
 });
+
+test("runs the checker when invoked through a symlinked path", async () => {
+  // A symlinked action path must not skip main() and exit 0 without checking.
+  const directory = await mkdtemp(join(tmpdir(), "baseline-link-"));
+  const link = join(directory, "v1");
+  await symlink(fileURLToPath(new URL("..", import.meta.url)), link, "dir");
+  const missing = join(directory, "no-such-repository");
+  const result = spawnSync(
+    process.execPath,
+    [join(link, "check.mjs"), "--repository-root", missing],
+    { encoding: "utf8" },
+  );
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /Next\.js baseline input rejected/u);
+});

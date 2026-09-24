@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { realpathSync } from "node:fs";
 import { readFile, readdir, realpath, stat } from "node:fs/promises";
 import { dirname, isAbsolute, join, matchesGlob, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
@@ -1114,6 +1115,19 @@ async function main() {
   }
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+// Compare resolved paths. A plain URL comparison fails when the action path is
+// reached through a symlink, which would skip main() and exit 0 without checking.
+function invokedDirectly() {
+  if (!process.argv[1]) return false;
+  try {
+    return (
+      realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))
+    );
+  } catch {
+    return import.meta.url === pathToFileURL(process.argv[1]).href;
+  }
+}
+
+if (invokedDirectly()) {
   await main();
 }
