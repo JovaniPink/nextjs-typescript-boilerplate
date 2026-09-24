@@ -40,8 +40,13 @@ requires hosted check evidence.
 `scripts.test-all` proves a gate only through `&&`-separated segments that are exactly
 `npm run <name>`, `corepack npm run <name>`, `npm test`, or `corepack npm test`,
 followed transitively through referenced scripts with the same parser. A script
-containing `||`, `;`, `|`, backticks, `$(`, or an `exit` segment proves nothing, because
-each can mask a failure. Echoed or argument-bearing references do not count.
+containing `||`, `;`, `|`, `&`, a newline, backticks, or `$(` proves nothing, because
+each can mask a failure. So does any segment that runs inside the script's own shell:
+one whose first word, after `NAME=value` assignments, is a shell builtin or keyword (for
+example `exit`, `exec`, `command`, `builtin`, `eval`, `return`, `.`, `source`, `cd`,
+`export`, or `set`), or that starts with `(`, `{`, or `!`. Those can end the shell early
+or change what later segments run. Ordinary programs run as child processes and cannot.
+Echoed or argument-bearing references do not count.
 
 ## Profiles
 
