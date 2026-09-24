@@ -633,6 +633,24 @@ test("test-all proof requires exact &&-separated script segments", async () => {
     ],
     ["exec replaces the shell", (s) => (s["test-all"] = "exec true && " + complete)],
     [
+      "command-wrapped exec",
+      (s) => (s["test-all"] = "command exec true && " + complete),
+    ],
+    ["builtin-wrapped exit", (s) => (s["test-all"] = "builtin exit 0 && " + complete)],
+    ["eval'd exit", (s) => (s["test-all"] = "eval exit && " + complete)],
+    ["sourced script", (s) => (s["test-all"] = ". ./stop.sh && " + complete)],
+    [
+      "return from a sourced context",
+      (s) => (s["test-all"] = "return 0 && " + complete),
+    ],
+    ["assignment-prefixed exit", (s) => (s["test-all"] = "CI=1 exit 0 && " + complete)],
+    [
+      "directory change to another project",
+      (s) => (s["test-all"] = "cd ../other && " + complete),
+    ],
+    ["subshell group", (s) => (s["test-all"] = "(exit 0) && " + complete)],
+    ["negated command", (s) => (s["test-all"] = "! false && " + complete)],
+    [
       "arguments after a reference",
       (s) =>
         (s["test-all"] = complete.replace("npm run lint", "npm run lint -- --quiet")),

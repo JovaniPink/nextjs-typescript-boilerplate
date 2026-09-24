@@ -370,6 +370,81 @@ function packageVersion(packageJson, name) {
 // segments can prove execution: any other shell control operator (including a
 // line break or a lone background `&`), pipeline, or substitution can mask a
 // failure or hide an early exit, so such a script proves nothing.
+// Shell builtins and keywords run inside the npm script's own shell, so they can
+// end it early (exit, exec, command exec, eval, return, sourcing) or change what
+// later segments run (cd, export, set). Any segment that starts with one, or with a
+// grouping or negation operator, proves nothing. Ordinary programs run as child
+// processes and cannot stop the shell.
+const shellWords = new Set([
+  ".",
+  ":",
+  "[",
+  "[[",
+  "alias",
+  "bg",
+  "break",
+  "builtin",
+  "case",
+  "cd",
+  "command",
+  "continue",
+  "declare",
+  "do",
+  "done",
+  "elif",
+  "else",
+  "enable",
+  "esac",
+  "eval",
+  "exec",
+  "exit",
+  "export",
+  "fc",
+  "fg",
+  "fi",
+  "for",
+  "function",
+  "getopts",
+  "hash",
+  "if",
+  "jobs",
+  "kill",
+  "let",
+  "local",
+  "logout",
+  "popd",
+  "pushd",
+  "read",
+  "readonly",
+  "return",
+  "select",
+  "set",
+  "shift",
+  "source",
+  "suspend",
+  "test",
+  "then",
+  "time",
+  "times",
+  "trap",
+  "type",
+  "typeset",
+  "ulimit",
+  "umask",
+  "unalias",
+  "unset",
+  "until",
+  "wait",
+  "while",
+]);
+
+function runsInsideTheShell(segment) {
+  const words = segment.split(/\s+/u).filter(Boolean);
+  while (words.length > 0 && /^[A-Za-z_][A-Za-z0-9_]*=/u.test(words[0])) words.shift();
+  if (words.length === 0) return true;
+  return /^[({!]/u.test(words[0]) || shellWords.has(words[0]);
+}
+
 function scriptReferences(script) {
   if (
     typeof script !== "string" ||
@@ -378,7 +453,7 @@ function scriptReferences(script) {
   )
     return [];
   const segments = script.split("&&").map((segment) => segment.trim());
-  if (segments.some((segment) => /^(?:exit|exec)(?:\s|$)/u.test(segment))) return [];
+  if (segments.some(runsInsideTheShell)) return [];
   return segments.flatMap((segment) => {
     if (/^(?:corepack )?npm test$/u.test(segment)) return ["test"];
     const match = /^(?:corepack )?npm run ([A-Za-z0-9:._-]+)$/u.exec(segment);
