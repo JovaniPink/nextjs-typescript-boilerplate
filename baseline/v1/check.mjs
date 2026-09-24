@@ -367,12 +367,18 @@ function packageVersion(packageJson, name) {
 }
 
 // Parse an npm script into the scripts it provably invokes. Only an &&-chain of
-// segments can prove execution: any other shell control operator, pipeline, or
-// substitution can mask a failure, so such a script proves nothing.
+// segments can prove execution: any other shell control operator (including a
+// line break or a lone background `&`), pipeline, or substitution can mask a
+// failure or hide an early exit, so such a script proves nothing.
 function scriptReferences(script) {
-  if (typeof script !== "string" || /\|\||[|;`]|\$\(/u.test(script)) return [];
+  if (
+    typeof script !== "string" ||
+    /\|\||[|;`\r\n]|\$\(/u.test(script) ||
+    /&/u.test(script.replaceAll("&&", ""))
+  )
+    return [];
   const segments = script.split("&&").map((segment) => segment.trim());
-  if (segments.some((segment) => /^exit(?:\s|$)/u.test(segment))) return [];
+  if (segments.some((segment) => /^(?:exit|exec)(?:\s|$)/u.test(segment))) return [];
   return segments.flatMap((segment) => {
     if (/^(?:corepack )?npm test$/u.test(segment)) return ["test"];
     const match = /^(?:corepack )?npm run ([A-Za-z0-9:._-]+)$/u.exec(segment);
@@ -516,11 +522,20 @@ export async function fetchLatestDocument(
   const chunks = [];
   let receivedBytes = 0;
   while (true) {
-    const { done, value } = await reader.read();
+    let chunk;
+    try {
+      chunk = await reader.read();
+    } catch (error) {
+      // A reset or aborted body is a currency failure, not a checker crash.
+      throw new BaselineInputError("latest-version response body failed closed", {
+        cause: error,
+      });
+    }
+    const { done, value } = chunk;
     if (done) break;
     receivedBytes += value.byteLength;
     if (receivedBytes > maximumBytes) {
-      await reader.cancel();
+      await reader.cancel().catch(() => {});
       throw new BaselineInputError(`latest document exceeds ${maximumBytes} bytes`);
     }
     chunks.push(value);

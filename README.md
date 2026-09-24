@@ -182,8 +182,12 @@ as inert data; it never installs dependencies or executes caller-defined command
 The baseline spec pins exact npm, Next.js, React, ESLint, and TypeScript releases, so
 Renovate holds those packages in two approval-gated groups, `npm package manager` and
 `Next.js baseline framework`, instead of mixing them into the grouped non-major update.
-Update `baseline/v1/spec.json` first, then approve the matching group on the dependency
-dashboard.
+A spec-only change fails this repository's own `baseline:check` (and a package-manager
+change also fails `toolchain:check`) until `package.json` matches, so land the spec,
+dependency, and lockfile bump together in one pull request: approve the matching group
+on the dependency dashboard, then add the `baseline/v1/spec.json`, `latest.json`, and
+any hard-coded pin changes to that branch, or submit one coordinated manual pull
+request.
 
 ## License
 

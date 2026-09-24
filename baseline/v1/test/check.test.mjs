@@ -620,6 +620,19 @@ test("test-all proof requires exact &&-separated script segments", async () => {
     ],
     ["early exit", (s) => (s["test-all"] = "exit 0 && " + complete)],
     [
+      "newline before an early exit",
+      (s) => (s["test-all"] = "echo begin\nexit 0 && " + complete),
+    ],
+    [
+      "carriage return before an early exit",
+      (s) => (s["test-all"] = "echo begin\rexit 0 && " + complete),
+    ],
+    [
+      "background operator before an early exit",
+      (s) => (s["test-all"] = "echo begin & exit 0 && " + complete),
+    ],
+    ["exec replaces the shell", (s) => (s["test-all"] = "exec true && " + complete)],
+    [
       "arguments after a reference",
       (s) =>
         (s["test-all"] = complete.replace("npm run lint", "npm run lint -- --quiet")),
@@ -786,6 +799,24 @@ test("CI coverage rejects shells, working directories, and narrowed triggers", a
       valid.replace("  push:\n", "  push:\n    branches: [release]\n"),
     ],
     [
+      "push branch excluded by a later negative pattern",
+      valid.replace("  push:\n", '  push:\n    branches: [main, "!main"]\n'),
+    ],
+    [
+      "push branch excluded by a later negative glob",
+      valid.replace(
+        "  push:\n",
+        "  push:\n    branches:\n      - main\n      - '!ma*'\n",
+      ),
+    ],
+    [
+      "pull request branch excluded by a later negative pattern",
+      valid.replace(
+        "  pull_request:\n",
+        '  pull_request:\n    branches: [main, "!main"]\n',
+      ),
+    ],
+    [
       "push paths filter",
       valid.replace("  push:\n", "  push:\n    paths: [docs/**]\n"),
     ],
@@ -823,6 +854,13 @@ test("CI coverage rejects shells, working directories, and narrowed triggers", a
       valid.replace(
         gate,
         "      - run: |\n          corepack npm install-scripts ls\n          corepack npm run test-all\n",
+      ),
+    ],
+    [
+      "main re-included after an earlier exclusion",
+      valid.replace(
+        "  push:\n",
+        '  push:\n    branches: ["!main", main, "!release/**"]\n',
       ),
     ],
     [
@@ -872,6 +910,42 @@ test("a failed currency fetch still reports every rule failure", async () => {
     },
   });
   assert.equal(report.passed, false);
+  assert.ok(report.failures.some((finding) => finding.ruleId === "node-support"));
+  assert.ok(
+    report.failures.some(
+      (finding) =>
+        finding.ruleId === "baseline-currency" &&
+        /failed closed/u.test(finding.message),
+    ),
+  );
+});
+
+test("a response body that fails mid-stream is a currency finding", async () => {
+  const failingBody = async () =>
+    new Response(
+      new ReadableStream({
+        pull(controller) {
+          controller.error(new TypeError("terminated"));
+        },
+      }),
+      { status: 200 },
+    );
+  await assert.rejects(
+    () =>
+      fetchLatestDocument("https://example.test/latest.json", {
+        fetchImpl: failingBody,
+      }),
+    (error) =>
+      error instanceof BaselineInputError && /failed closed/u.test(error.message),
+  );
+  const root = await makeRepository("stock-server");
+  await withPackage(root, (pkg) => {
+    pkg.engines.node = ">=24";
+  });
+  const report = await verify(root, {
+    latestUrl: "https://example.test/latest.json",
+    fetchImpl: failingBody,
+  });
   assert.ok(report.failures.some((finding) => finding.ruleId === "node-support"));
   assert.ok(
     report.failures.some(

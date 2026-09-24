@@ -1,3 +1,5 @@
+import { matchesGlob } from "node:path";
+
 // Inspect a deliberately bounded, inert subset of workflow YAML. Unsupported
 // dynamic matrices, aliases, exclusions, and conditional gates provide no proof.
 function unquote(value) {
@@ -119,6 +121,24 @@ function hasOnly(block, keys) {
   return blocks(block.body).every((entry) => keys.includes(entry.key));
 }
 
+// GitHub evaluates branch filters in order and the last matching pattern wins, so
+// a later negative pattern can exclude main after a positive entry included it.
+// Only a literal `main` proves inclusion. A negative pattern using `?` or `+`
+// (whose GitHub meaning differs from a path glob) is assumed to exclude main.
+function branchesIncludeMain(block) {
+  if (!block) return true;
+  let included = false;
+  for (const pattern of list(block)) {
+    if (pattern === "main") included = true;
+    else if (
+      pattern.startsWith("!") &&
+      (/[?+]/u.test(pattern) || matchesGlob("main", pattern.slice(1)))
+    )
+      included = false;
+  }
+  return included;
+}
+
 function triggersEveryMainChange(events) {
   const listed = list(events);
   const push = field(events, "push");
@@ -126,14 +146,14 @@ function triggersEveryMainChange(events) {
   const pushCovered = push
     ? push.value === "" &&
       hasOnly(push, ["branches"]) &&
-      (!field(push, "branches") || list(field(push, "branches")).includes("main"))
+      branchesIncludeMain(field(push, "branches"))
     : listed.includes("push");
   const types = field(pullRequest, "types");
   const branches = field(pullRequest, "branches");
   const pullRequestCovered = pullRequest
     ? pullRequest.value === "" &&
       hasOnly(pullRequest, ["branches", "types"]) &&
-      (!branches || list(branches).includes("main")) &&
+      branchesIncludeMain(branches) &&
       (!types || ["opened", "synchronize"].every((type) => list(types).includes(type)))
     : listed.includes("pull_request");
   return pushCovered && pullRequestCovered;
