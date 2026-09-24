@@ -14,7 +14,9 @@ following paths outside the checkout.
 - Pull-request and push checks execute a full-SHA-pinned copy of this action.
 - Scheduled checks may fetch only `latest.json` over HTTPS. The response is bounded to 4
   KiB, parsed as strict JSON, never executed, and fails closed on network or schema
-  errors.
+  errors. A currency failure is reported as `baseline-currency` alongside every rule
+  finding, never instead of them, and cannot be excepted. Enabling `check-latest`
+  without a latest URL is an input error.
 - The checker is additive. Product-specific gates can be stronger and are not removed or
   executed by this action.
 
@@ -28,8 +30,18 @@ CI coverage is checked within actual pull-request and push jobs: Node setup, the
 complete gate, install-script review, and both audits must belong to jobs covering Node
 22 and 24. The dependency-free reader supports literal versions, static matrix axes, and
 include-only matrices. Conditional gates, tolerated failures, aliases, dynamic matrices,
-mixed include expansion, and exclusions do not establish coverage. This checks
-declarations; successful execution still requires hosted check evidence.
+mixed include expansion, and exclusions do not establish coverage. Neither do gate steps
+with a custom `shell` or `working-directory`, job or workflow `defaults.run`, folded
+(`>`) run scalars, a `push` filter other than `branches` including `main`, or a
+`pull_request` filter other than `branches` including `main` and `types` including
+`opened` and `synchronize`. This checks declarations; successful execution still
+requires hosted check evidence.
+
+`scripts.test-all` proves a gate only through `&&`-separated segments that are exactly
+`npm run <name>`, `corepack npm run <name>`, `npm test`, or `corepack npm test`,
+followed transitively through referenced scripts with the same parser. A script
+containing `||`, `;`, `|`, backticks, `$(`, or an `exit` segment proves nothing, because
+each can mask a failure. Echoed or argument-bearing references do not count.
 
 ## Profiles
 
@@ -75,9 +87,13 @@ node baseline/v1/check.mjs \
 node --test baseline/v1/test/check.test.mjs
 ```
 
-The caller workflow must check out with `persist-credentials: false`, use
-`contents: read`, and pin `JovaniPink/nextjs-typescript-boilerplate/baseline/v1` to a
-full commit SHA. Only scheduled runs set `check-latest: true`.
+One caller workflow must prove all of the following in its parsed structure, not its
+comments or text spread across files: `on.schedule` with a cron entry; top-level
+`permissions` with `contents: read` and no write scope; and an unconditional job without
+its own `permissions` in which an unconditional `actions/checkout` step with
+`persist-credentials: false` precedes an unconditional step that uses
+`JovaniPink/nextjs-typescript-boilerplate/baseline/v1@<40-hex SHA>` with `check-latest`
+exactly `${{ github.event_name == 'schedule' }}`.
 
 Weekly schedules are deterministically staggered from the repository name: interpret the
 first three bytes of its SHA-256 digest as unsigned integers, then use byte one modulo

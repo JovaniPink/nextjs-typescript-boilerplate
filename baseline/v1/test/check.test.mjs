@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { mkdtemp, mkdir, readFile, symlink, unlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 import {
   BaselineInputError,
   checkRepository,
@@ -588,4 +590,320 @@ test("validates current, outdated, malformed, oversized, and failed currency fet
       }),
     /failed closed/u,
   );
+});
+
+async function failingRules(root) {
+  return new Set((await verify(root)).failures.map((finding) => finding.ruleId));
+}
+
+async function withPackage(root, change) {
+  const path = join(root, "package.json");
+  const pkg = JSON.parse(await readFile(path, "utf8"));
+  change(pkg);
+  await writeJson(path, pkg);
+}
+
+test("test-all proof requires exact &&-separated script segments", async () => {
+  const complete = basePackage().scripts["test-all"];
+  for (const [label, change] of [
+    [
+      "echoed reference",
+      (s) => (s["test-all"] = complete.replace("npm run lint", "echo npm run lint")),
+    ],
+    ["tolerated failure", (s) => (s["test-all"] = complete + " || true")],
+    ["sequenced command", (s) => (s["test-all"] = complete + "; true")],
+    ["pipeline", (s) => (s["test-all"] = complete + " | cat")],
+    ["backticks", (s) => (s["test-all"] = complete + " && echo `date`")],
+    [
+      "command substitution",
+      (s) => (s["test-all"] = complete + " && echo $" + "(date)"),
+    ],
+    ["early exit", (s) => (s["test-all"] = "exit 0 && " + complete)],
+    [
+      "arguments after a reference",
+      (s) =>
+        (s["test-all"] = complete.replace("npm run lint", "npm run lint -- --quiet")),
+    ],
+    [
+      "tolerated transitive failure",
+      (s) => {
+        s["lint:wrapper"] = "npm run lint || true";
+        s["test-all"] = complete.replace("npm run lint", "npm run lint:wrapper");
+      },
+    ],
+  ]) {
+    const root = await makeRepository("stock-server");
+    await withPackage(root, (pkg) => change(pkg.scripts));
+    assert.ok((await failingRules(root)).has("quality-scripts"), label);
+  }
+
+  const root = await makeRepository("stock-server");
+  await withPackage(root, (pkg) => {
+    pkg.scripts["lint:all"] = "corepack npm run lint && node scripts/extra.mjs";
+    pkg.scripts["test-all"] = complete
+      .replace("npm run lint", "corepack npm run lint:all")
+      .replace("npm test", "corepack npm test");
+  });
+  assert.equal((await verify(root)).passed, true);
+});
+
+test("baseline-workflow proof must come from one workflow's parsed structure", async () => {
+  const valid = workflow();
+  const reference = "      - uses: " + actionReference;
+  const checkLatest =
+    "          check-latest: $" + "{{ github.event_name == 'schedule' }}";
+  const actionStep = reference + "\n        with:\n" + checkLatest + "\n";
+  for (const [label, changed] of [
+    [
+      "comment only",
+      valid.replace(
+        actionStep,
+        "      # " + actionReference + "\n      # " + checkLatest.trim() + "\n",
+      ),
+    ],
+    [
+      "tolerant expression",
+      valid.replace(
+        "github.event_name == 'schedule' }}",
+        "github.event_name == 'schedule' || true }}",
+      ),
+    ],
+    [
+      "conditional action",
+      valid.replace(reference, "      - if: false\n        uses: " + actionReference),
+    ],
+    [
+      "unpinned action",
+      valid.replace(actionReference, actionReference.slice(0, -40) + "main"),
+    ],
+    [
+      "no schedule",
+      valid.replace('  schedule:\n    - cron: "0 1 * * 1"\n', "  # schedule:\n"),
+    ],
+    [
+      "write permission",
+      valid.replace("  contents: read", "  contents: write # contents: read"),
+    ],
+    [
+      "persisted credentials",
+      valid.replace(
+        "persist-credentials: false",
+        "persist-credentials: true # persist-credentials: false",
+      ),
+    ],
+    ["conditional job", valid.replace("  complete:\n", "  complete:\n    if: false\n")],
+  ]) {
+    const root = await makeRepository("stock-server");
+    await writeFile(join(root, ".github", "workflows", "ci.yml"), changed);
+    assert.ok((await failingRules(root)).has("baseline-workflow"), label);
+  }
+
+  const split = await makeRepository("stock-server");
+  await writeFile(
+    join(split, ".github", "workflows", "ci.yml"),
+    valid.replace(actionStep, "").replace('  schedule:\n    - cron: "0 1 * * 1"\n', ""),
+  );
+  await writeFile(
+    join(split, ".github", "workflows", "scheduled.yml"),
+    'on:\n  schedule:\n    - cron: "0 1 * * 1"\njobs:\n  noop:\n    steps:\n      - run: echo ' +
+      actionReference +
+      "\n",
+  );
+  await writeFile(
+    join(split, ".github", "workflows", "unscheduled.yml"),
+    "on:\n  pull_request:\npermissions:\n  contents: read\njobs:\n  verify:\n    steps:\n" +
+      "      - uses: actions/checkout@0123456789abcdef0123456789abcdef01234567\n        with:\n          persist-credentials: false\n" +
+      actionStep,
+  );
+  assert.ok((await failingRules(split)).has("baseline-workflow"), "split workflows");
+
+  const separate = await makeRepository("stock-server");
+  await writeFile(
+    join(separate, ".github", "workflows", "ci.yml"),
+    valid.replace(actionStep, "").replace('  schedule:\n    - cron: "0 1 * * 1"\n', ""),
+  );
+  await writeFile(
+    join(separate, ".github", "workflows", "nextjs-baseline.yml"),
+    [
+      "name: Next.js baseline",
+      "on:",
+      "  pull_request:",
+      "  push:",
+      "    branches: [main]",
+      "  schedule:",
+      '    - cron: "1 12 * * 5"',
+      "permissions:",
+      "  contents: read",
+      "jobs:",
+      "  verify:",
+      "    runs-on: ubuntu-latest",
+      "    steps:",
+      "      - name: Check out caller repository",
+      "        uses: actions/checkout@0123456789abcdef0123456789abcdef01234567 # v7",
+      "        with:",
+      "          persist-credentials: false",
+      "      - name: Verify pinned baseline",
+      "        uses: " + actionReference,
+      "        with:",
+      '          check-latest: "$' + "{{ github.event_name == 'schedule' }}\"",
+      "",
+    ].join("\n"),
+  );
+  assert.equal((await verify(separate)).passed, true);
+});
+
+test("CI coverage rejects shells, working directories, and narrowed triggers", async () => {
+  const valid = workflow();
+  const gate = "      - run: corepack npm run test-all\n";
+  for (const [label, changed] of [
+    [
+      "custom shell",
+      valid.replace(
+        gate,
+        "      - shell: bash {0}\n        run: |\n          corepack npm run test-all\n          corepack npm install-scripts ls\n",
+      ),
+    ],
+    [
+      "step working directory",
+      valid.replace(
+        gate,
+        "      - working-directory: docs\n        run: corepack npm run test-all\n",
+      ),
+    ],
+    [
+      "job default working directory",
+      valid.replace(
+        "    steps:\n",
+        "    defaults:\n      run:\n        working-directory: docs\n    steps:\n",
+      ),
+    ],
+    [
+      "workflow default shell",
+      valid.replace("jobs:\n", "defaults:\n  run:\n    shell: bash {0}\njobs:\n"),
+    ],
+    [
+      "push to another branch",
+      valid.replace("  push:\n", "  push:\n    branches: [release]\n"),
+    ],
+    [
+      "push paths filter",
+      valid.replace("  push:\n", "  push:\n    paths: [docs/**]\n"),
+    ],
+    [
+      "closed pull requests only",
+      valid.replace("  pull_request:\n", "  pull_request:\n    types: [closed]\n"),
+    ],
+    [
+      "pull requests without synchronize",
+      valid.replace("  pull_request:\n", "  pull_request:\n    types: [opened]\n"),
+    ],
+    [
+      "folded run scalar",
+      valid.replace(
+        gate,
+        "      - run: >\n          corepack npm run test-all\n          corepack npm run lint\n",
+      ),
+    ],
+    [
+      "job-level if",
+      valid.replace(
+        "  complete:\n",
+        "  complete:\n    if: github.event_name == 'push'\n",
+      ),
+    ],
+  ]) {
+    const root = await makeRepository("stock-server");
+    await writeFile(join(root, ".github", "workflows", "ci.yml"), changed);
+    assert.ok((await failingRules(root)).has("ci-coverage"), label);
+  }
+
+  for (const [label, changed] of [
+    [
+      "literal block scalar",
+      valid.replace(
+        gate,
+        "      - run: |\n          corepack npm install-scripts ls\n          corepack npm run test-all\n",
+      ),
+    ],
+    [
+      "main push and complete PR types",
+      valid
+        .replace("  push:\n", "  push:\n    branches:\n      - main\n")
+        .replace(
+          "  pull_request:\n",
+          "  pull_request:\n    types: [opened, synchronize, reopened]\n",
+        ),
+    ],
+  ]) {
+    const root = await makeRepository("stock-server");
+    await writeFile(join(root, ".github", "workflows", "ci.yml"), changed);
+    assert.equal((await verify(root)).passed, true, label);
+  }
+
+  const listed = await makeRepository("stock-server");
+  await writeFile(
+    join(listed, ".github", "workflows", "ci.yml"),
+    valid
+      .replace(
+        'on:\n  pull_request:\n  push:\n  schedule:\n    - cron: "0 1 * * 1"\n',
+        "on: [pull_request, push]\n",
+      )
+      .replace(/      - uses: JovaniPink[\s\S]*$/u, ""),
+  );
+  await writeFile(
+    join(listed, ".github", "workflows", "baseline.yml"),
+    valid.replace(
+      /      - uses: actions\/setup-node[\s\S]*?(?=      - uses: JovaniPink)/u,
+      "",
+    ),
+  );
+  assert.equal((await verify(listed)).passed, true, "on list form");
+});
+
+test("a failed currency fetch still reports every rule failure", async () => {
+  const root = await makeRepository("stock-server");
+  await withPackage(root, (pkg) => {
+    pkg.engines.node = ">=24";
+  });
+  const report = await verify(root, {
+    latestUrl: "https://example.test/latest.json",
+    fetchImpl: async () => {
+      throw new Error("offline");
+    },
+  });
+  assert.equal(report.passed, false);
+  assert.ok(report.failures.some((finding) => finding.ruleId === "node-support"));
+  assert.ok(
+    report.failures.some(
+      (finding) =>
+        finding.ruleId === "baseline-currency" &&
+        /failed closed/u.test(finding.message),
+    ),
+  );
+});
+
+test("check-latest without a latest URL is an input error", async () => {
+  const root = await makeRepository("stock-server");
+  const checker = fileURLToPath(new URL("../check.mjs", import.meta.url));
+  for (const url of ["", undefined]) {
+    const env = {
+      ...process.env,
+      GITHUB_WORKSPACE: root,
+      NEXTJS_BASELINE_CHECK_LATEST: "true",
+    };
+    delete env.NEXTJS_BASELINE_LATEST_URL;
+    if (url !== undefined) env.NEXTJS_BASELINE_LATEST_URL = url;
+    const result = spawnSync(process.execPath, [checker, "--from-action-env"], {
+      env,
+      encoding: "utf8",
+    });
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stderr, /latest URL/u);
+  }
+  const cli = spawnSync(
+    process.execPath,
+    [checker, "--repository-root", root, "--latest-url", ""],
+    { encoding: "utf8" },
+  );
+  assert.equal(cli.status, 1, cli.stdout + cli.stderr);
 });

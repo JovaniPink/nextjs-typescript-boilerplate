@@ -3,7 +3,15 @@
 import { readFile, readdir, realpath, stat } from "node:fs/promises";
 import { dirname, isAbsolute, join, matchesGlob, resolve, sep } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { hasCompleteCiCoverage } from "./workflow-coverage.mjs";
+import {
+  blocks,
+  field,
+  hasCompleteCiCoverage,
+  items,
+  linesWithoutComments,
+  list,
+  unconditional,
+} from "./workflow-coverage.mjs";
 
 const moduleRoot = dirname(fileURLToPath(import.meta.url));
 const manifestKeys = new Set([
@@ -358,23 +366,81 @@ function packageVersion(packageJson, name) {
   );
 }
 
+// Parse an npm script into the scripts it provably invokes. Only an &&-chain of
+// segments can prove execution: any other shell control operator, pipeline, or
+// substitution can mask a failure, so such a script proves nothing.
+function scriptReferences(script) {
+  if (typeof script !== "string" || /\|\||[|;`]|\$\(/u.test(script)) return [];
+  const segments = script.split("&&").map((segment) => segment.trim());
+  if (segments.some((segment) => /^exit(?:\s|$)/u.test(segment))) return [];
+  return segments.flatMap((segment) => {
+    if (/^(?:corepack )?npm test$/u.test(segment)) return ["test"];
+    const match = /^(?:corepack )?npm run ([A-Za-z0-9:._-]+)$/u.exec(segment);
+    return match ? [match[1]] : [];
+  });
+}
+
 function hasScriptReference(script, name) {
-  if (name === "test" && /(?:^|\s)(?:npm|corepack npm) test(?:\s|$)/u.test(script))
-    return true;
-  const escaped = name.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
-  return new RegExp(`(?:npm|corepack npm) run ${escaped}(?:\\s|$)`, "u").test(script);
+  return scriptReferences(script).includes(name);
 }
 
 function scriptTransitivelyReferences(scripts, entry, target, visited = new Set()) {
   if (visited.has(entry) || typeof scripts[entry] !== "string") return false;
   visited.add(entry);
-  if (hasScriptReference(scripts[entry], target)) return true;
-  return Object.keys(scripts).some(
+  const references = scriptReferences(scripts[entry]);
+  if (references.includes(target)) return true;
+  return references.some(
     (candidate) =>
       candidate !== entry &&
-      hasScriptReference(scripts[entry], candidate) &&
+      Object.hasOwn(scripts, candidate) &&
       scriptTransitivelyReferences(scripts, candidate, target, visited),
   );
+}
+
+const baselineActionPattern =
+  /^JovaniPink\/nextjs-typescript-boilerplate\/baseline\/v1@[0-9a-f]{40}$/u;
+const scheduledCurrencyExpression = "${{ github.event_name == 'schedule' }}";
+
+function stepUses(step, pattern) {
+  return pattern.test(field(step, "uses")?.value ?? "");
+}
+
+// Every property must be proven inside one parsed workflow; comments and text
+// spread across files prove nothing.
+export function hasBaselineWorkflow(text) {
+  const workflow = { value: "", body: linesWithoutComments(text) };
+  const schedule = field(field(workflow, "on"), "schedule");
+  const permissions = field(workflow, "permissions");
+  if (
+    !items(schedule).some((entry) => field(entry, "cron")?.value) ||
+    field(permissions, "contents")?.value !== "read" ||
+    blocks(permissions?.body ?? []).some((entry) => entry.value === "write")
+  )
+    return false;
+  const jobs = field(workflow, "jobs");
+  if (!jobs || jobs.value !== "") return false;
+  return blocks(jobs.body).some((job) => {
+    if (!unconditional(job) || field(job, "permissions")) return false;
+    const steps = items(field(job, "steps"));
+    const actionIndex = steps.findIndex(
+      (step) =>
+        unconditional(step) &&
+        stepUses(step, baselineActionPattern) &&
+        field(field(step, "with"), "check-latest")?.value ===
+          scheduledCurrencyExpression,
+    );
+    return (
+      actionIndex > 0 &&
+      steps
+        .slice(0, actionIndex)
+        .some(
+          (step) =>
+            unconditional(step) &&
+            stepUses(step, /^actions\/checkout@[\w.-]+$/u) &&
+            field(field(step, "with"), "persist-credentials")?.value === "false",
+        )
+    );
+  });
 }
 
 function compareSemanticVersions(left, right) {
@@ -746,7 +812,6 @@ export async function checkRepository({
   }
 
   const workflowFiles = await readWorkflowText(rootRealPath, spec.limits.workflowBytes);
-  const workflows = workflowFiles.join("\n");
   record(
     "ci-coverage",
     hasCompleteCiCoverage(
@@ -758,17 +823,10 @@ export async function checkRepository({
     "pull-request and push jobs must set up Node 22 and 24 and run the complete gate, install-script review, and both audits without conditional or tolerated failures",
   );
 
-  const baselineActionPattern =
-    /JovaniPink\/nextjs-typescript-boilerplate\/baseline\/v1@[0-9a-f]{40}/u;
   record(
     "baseline-workflow",
-    workflows.includes("schedule:") &&
-      workflows.includes("permissions:") &&
-      workflows.includes("contents: read") &&
-      workflows.includes("persist-credentials: false") &&
-      workflows.includes("github.event_name == 'schedule'") &&
-      baselineActionPattern.test(workflows),
-    "caller workflow must pin the baseline action and enable inert scheduled currency checks",
+    workflowFiles.some(hasBaselineWorkflow),
+    "one caller workflow must schedule an unconditional, full-SHA-pinned baseline action with read-only contents, uncredentialed checkout, and schedule-only currency checks",
   );
 
   const configText = [];
@@ -874,12 +932,19 @@ export async function checkRepository({
     }
   }
 
-  if (latestUrl) {
-    const latest = await fetchLatestDocument(latestUrl, {
-      fetchImpl,
-      maximumBytes: spec.limits.latestBytes,
-    });
-    validateLatestDocument(latest, manifest.baselineVersion);
+  if (latestUrl !== null && latestUrl !== undefined) {
+    // Currency failures are reported with, never instead of, rule findings. The
+    // rule identifier is outside the spec so no exception can suppress it.
+    try {
+      const latest = await fetchLatestDocument(latestUrl, {
+        fetchImpl,
+        maximumBytes: spec.limits.latestBytes,
+      });
+      validateLatestDocument(latest, manifest.baselineVersion);
+    } catch (error) {
+      if (!(error instanceof BaselineInputError)) throw error;
+      failures.push({ ruleId: "baseline-currency", message: error.message });
+    }
   }
 
   return {
@@ -900,6 +965,9 @@ function parseArguments(arguments_) {
       throw new BaselineInputError("check-latest input must be true or false");
     }
     const checkLatest = process.env.NEXTJS_BASELINE_CHECK_LATEST === "true";
+    if (checkLatest && !process.env.NEXTJS_BASELINE_LATEST_URL) {
+      throw new BaselineInputError("check-latest requires a latest URL");
+    }
     return {
       repositoryRoot: process.env.GITHUB_WORKSPACE ?? process.cwd(),
       manifestPath:
@@ -919,8 +987,11 @@ function parseArguments(arguments_) {
       throw new BaselineInputError(`missing value for ${String(flag)}`);
     if (flag === "--repository-root") options.repositoryRoot = value;
     else if (flag === "--manifest") options.manifestPath = value;
-    else if (flag === "--latest-url") options.latestUrl = value;
-    else throw new BaselineInputError(`unknown argument: ${String(flag)}`);
+    else if (flag === "--latest-url") {
+      if (value.length === 0)
+        throw new BaselineInputError("--latest-url requires a latest URL");
+      options.latestUrl = value;
+    } else throw new BaselineInputError(`unknown argument: ${String(flag)}`);
   }
   return options;
 }

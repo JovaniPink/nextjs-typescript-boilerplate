@@ -4,7 +4,7 @@ function unquote(value) {
   return value.replace(/^(["'])(.*)\1$/u, "$2");
 }
 
-function linesWithoutComments(text) {
+export function linesWithoutComments(text) {
   return text
     .split(/\r?\n/u)
     .map((line) => {
@@ -27,7 +27,7 @@ function indent(line) {
   return line.length - line.trimStart().length;
 }
 
-function blocks(lines, sequence = false) {
+export function blocks(lines, sequence = false) {
   if (lines.length === 0 || lines.some((line) => /^\t/u.test(line))) return [];
   const depth = lines.reduce(
     (minimum, line) => Math.min(minimum, indent(line)),
@@ -55,17 +55,17 @@ function blocks(lines, sequence = false) {
   });
 }
 
-function field(block, key) {
+export function field(block, key) {
   if (!block || block.value !== "") return null;
   const matches = blocks(block.body).filter((entry) => entry.key === key);
   return matches.length === 1 ? matches[0] : null;
 }
 
-function items(block) {
+export function items(block) {
   return block?.value === "" ? blocks(block.body, true) : [];
 }
 
-function list(block) {
+export function list(block) {
   if (!block) return [];
   if (/^\[.*\]$/u.test(block.value ?? ""))
     return block.value
@@ -77,7 +77,7 @@ function list(block) {
   return [];
 }
 
-function unconditional(block) {
+export function unconditional(block) {
   return (
     !block.body.some((line) => /^\s*<<:/u.test(line)) &&
     !field(block, "if") &&
@@ -86,19 +86,57 @@ function unconditional(block) {
   );
 }
 
+function runsInDefaultShell(block) {
+  // A custom shell (for example `bash {0}`) or working directory changes what a
+  // gate line proves, so neither a step nor its job or workflow defaults may set one.
+  return (
+    !field(block, "shell") &&
+    !field(block, "working-directory") &&
+    !field(field(block, "defaults"), "run")
+  );
+}
+
 function runCommands(step) {
-  if (!unconditional(step)) return [];
+  if (!unconditional(step) || !runsInDefaultShell(step)) return [];
   const run = field(step, "run");
   if (!run) return [];
-  const commands = /^[|>][-+]?$/u.test(run.value ?? "")
+  // Literal block scalars keep one command per line; folded scalars join lines.
+  const commands = /^\|[-+]?$/u.test(run.value ?? "")
     ? run.body.map((line) => line.trim())
-    : [run.value];
+    : /^[>|]/u.test(run.value ?? "")
+      ? []
+      : [run.value];
   // Count executable gate lines, never echoed text, shell branches, or comments.
-  return commands.every((line) =>
-    /^corepack npm (?:install-scripts ls|run [A-Za-z0-9:_-]+)$/u.test(line),
-  )
+  return commands.length > 0 &&
+    commands.every((line) =>
+      /^corepack npm (?:install-scripts ls|run [A-Za-z0-9:_-]+)$/u.test(line),
+    )
     ? commands
     : [];
+}
+
+function hasOnly(block, keys) {
+  return blocks(block.body).every((entry) => keys.includes(entry.key));
+}
+
+function triggersEveryMainChange(events) {
+  const listed = list(events);
+  const push = field(events, "push");
+  const pullRequest = field(events, "pull_request");
+  const pushCovered = push
+    ? push.value === "" &&
+      hasOnly(push, ["branches"]) &&
+      (!field(push, "branches") || list(field(push, "branches")).includes("main"))
+    : listed.includes("push");
+  const types = field(pullRequest, "types");
+  const branches = field(pullRequest, "branches");
+  const pullRequestCovered = pullRequest
+    ? pullRequest.value === "" &&
+      hasOnly(pullRequest, ["branches", "types"]) &&
+      (!branches || list(branches).includes("main")) &&
+      (!types || ["opened", "synchronize"].every((type) => list(types).includes(type)))
+    : listed.includes("pull_request");
+  return pushCovered && pullRequestCovered;
 }
 
 function nodeVersions(job, steps) {
@@ -127,17 +165,12 @@ export function hasCompleteCiCoverage(workflows, auditScripts) {
   const covered = new Set();
   for (const text of workflows) {
     const workflow = { value: "", body: linesWithoutComments(text) };
-    const events = field(workflow, "on");
-    if (
-      !["pull_request", "push"].every(
-        (event) => field(events, event) || list(events).includes(event),
-      )
-    )
-      continue;
+    if (!triggersEveryMainChange(field(workflow, "on"))) continue;
+    if (!runsInDefaultShell(workflow)) continue;
     const jobs = field(workflow, "jobs");
     if (!jobs || jobs.value !== "") continue;
     for (const job of blocks(jobs.body)) {
-      if (!unconditional(job)) continue;
+      if (!unconditional(job) || !runsInDefaultShell(job)) continue;
       const steps = items(field(job, "steps"));
       const setupIndex = steps.findIndex((step) =>
         /^actions\/setup-node@[\w.-]+$/u.test(field(step, "uses")?.value ?? ""),
