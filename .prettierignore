@@ -3,3 +3,9 @@ coverage/
 node_modules/
 package-lock.json
 next-env.d.ts
+
+# Generated skill bytes are checked against their pinned source by owned-skills CI.
+.agents/skills/
+.codex/skills/
+.claude/skills/
+docs/skills/generated.json

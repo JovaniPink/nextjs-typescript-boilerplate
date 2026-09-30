@@ -1,0 +1,33 @@
+{
+  "format_version": 1,
+  "skill": "starter-nextjs-cache-auth-boundary-review",
+  "case_id": "starter-nextjs-cache-auth-boundary-review-near-miss-3",
+  "prompt": "Diagnose React render timing without cache or auth concerns.",
+  "fixture_references": ["docs/skills/contract.md", "docs/skills/cases.json"],
+  "obligations": [
+    {
+      "id": "project-contract",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Apply the applicable project contract invariants and actual build settings; a stale contract blocks dependent work."
+    },
+    {
+      "id": "scope",
+      "kind": "safety",
+      "mandatory": true,
+      "assertion": "Use only task-authorized paths and deterministic fixtures; no incidental signing, migration, provider, live-data or dependency changes."
+    },
+    {
+      "id": "evidence",
+      "kind": "provenance",
+      "mandatory": true,
+      "assertion": "Report observed, failed and unrun checks separately, without invented journey, invocation, device or performance evidence."
+    },
+    {
+      "id": "routing",
+      "kind": "routing",
+      "mandatory": true,
+      "assertion": "Scope and authority match the request; absent capabilities produce Not Needed and missing preconditions produce Blocked.; Settings and framework behavior are grounded in current repository evidence; required semantic obligations survive formatting changes.; Executed results, proposals and unavailable checks are distinguished; no unsupported mutation or invented evidence appears."
+    }
+  ]
+}

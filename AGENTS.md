@@ -81,3 +81,19 @@ Before finishing a code change, run:
 - `corepack npm run audit:dependencies`
 
 CI must continue to validate Node 22 and Node 24 from the committed lockfile.
+
+## Owned workflow routing
+
+Read [the project workflow contract](docs/skills/contract.md) and
+[projection guidance](docs/skills/README.md).
+
+- `starter-nextjs-feature-delivery`: explicit selection only; applies within task
+  authority.
+- `starter-nextjs-cache-auth-boundary-review`: read-only discovery when the request
+  matches its description.
+- `starter-react-rendering-performance-diagnosis`: read-only discovery when the request
+  matches its description.
+
+Skill selection does not grant permission for wider file mutation, dependencies,
+signing, migrations, live data or publication. Preserve root instructions and compare
+current settings with the contract; stale contracts block dependent work.

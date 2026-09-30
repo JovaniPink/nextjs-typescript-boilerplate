@@ -1,0 +1,61 @@
+{
+  "codex_version": "0.154.0",
+  "contract_sha256": "fbc489dbeb2ba44f5ffd1efce02aa7e89338306ca85572c2ebc8c3f0f45a7b83",
+  "files": {
+    ".agents/skills/starter-nextjs-cache-auth-boundary-review/SKILL.md": "357191a87fbc1e94b3c41ce77ca677fe6e350e30f907dc1896a332c9c888153c",
+    ".agents/skills/starter-nextjs-cache-auth-boundary-review/agents/openai.yaml": "81483971ca5d31fbeabd095318b67822852ffe6d281a18cb0bbc05a64f7ba574",
+    ".agents/skills/starter-nextjs-cache-auth-boundary-review/references/boundaries.md": "b1b020f57578cb93a39d5eb03fd9a2f1f4798b9c2578a568dda205c814dbed62",
+    ".agents/skills/starter-nextjs-cache-auth-boundary-review/references/project-contract.md": "fbc489dbeb2ba44f5ffd1efce02aa7e89338306ca85572c2ebc8c3f0f45a7b83",
+    ".agents/skills/starter-react-rendering-performance-diagnosis/SKILL.md": "1326e774b3e7eb125e60a22f06d491107c8d0a4303f38ed965e554ca699f786e",
+    ".agents/skills/starter-react-rendering-performance-diagnosis/agents/openai.yaml": "24346981c7d75f63b5df3e8f7996ede47fb8c1d0f4b9d74be3ac93d94b80f505",
+    ".agents/skills/starter-react-rendering-performance-diagnosis/references/measurement.md": "57b507d5407f726c419cfc0994f507b970495394843f253bea26e889f98254a5",
+    ".agents/skills/starter-react-rendering-performance-diagnosis/references/project-contract.md": "fbc489dbeb2ba44f5ffd1efce02aa7e89338306ca85572c2ebc8c3f0f45a7b83",
+    ".claude/skills/starter-nextjs-cache-auth-boundary-review/SKILL.md": "357191a87fbc1e94b3c41ce77ca677fe6e350e30f907dc1896a332c9c888153c",
+    ".claude/skills/starter-nextjs-cache-auth-boundary-review/references/boundaries.md": "b1b020f57578cb93a39d5eb03fd9a2f1f4798b9c2578a568dda205c814dbed62",
+    ".claude/skills/starter-nextjs-cache-auth-boundary-review/references/project-contract.md": "fbc489dbeb2ba44f5ffd1efce02aa7e89338306ca85572c2ebc8c3f0f45a7b83",
+    ".claude/skills/starter-nextjs-feature-delivery/SKILL.md": "4e953a2f6fe12ded5786484eff1019e6d0566144002bb72eaf20bda3b42bf308",
+    ".claude/skills/starter-nextjs-feature-delivery/references/delivery.md": "36d9003c924ae1f22d13aef449cb3471915666a4ccc1eafeedd3e73481ba6884",
+    ".claude/skills/starter-nextjs-feature-delivery/references/project-contract.md": "fbc489dbeb2ba44f5ffd1efce02aa7e89338306ca85572c2ebc8c3f0f45a7b83",
+    ".claude/skills/starter-react-rendering-performance-diagnosis/SKILL.md": "1326e774b3e7eb125e60a22f06d491107c8d0a4303f38ed965e554ca699f786e",
+    ".claude/skills/starter-react-rendering-performance-diagnosis/references/measurement.md": "57b507d5407f726c419cfc0994f507b970495394843f253bea26e889f98254a5",
+    ".claude/skills/starter-react-rendering-performance-diagnosis/references/project-contract.md": "fbc489dbeb2ba44f5ffd1efce02aa7e89338306ca85572c2ebc8c3f0f45a7b83",
+    ".codex/skills/starter-nextjs-feature-delivery/SKILL.md": "967db41a5d2881bfe466a113131488f9b19bad7f6f4a3492379a84bceac80d77",
+    ".codex/skills/starter-nextjs-feature-delivery/agents/openai.yaml": "1f1e3693e8f7c7ea12b17e8cdc278b1daa50acb2efd25d04ccbdd2f1d77f63f8",
+    ".codex/skills/starter-nextjs-feature-delivery/references/delivery.md": "36d9003c924ae1f22d13aef449cb3471915666a4ccc1eafeedd3e73481ba6884",
+    ".codex/skills/starter-nextjs-feature-delivery/references/project-contract.md": "fbc489dbeb2ba44f5ffd1efce02aa7e89338306ca85572c2ebc8c3f0f45a7b83"
+  },
+  "format_version": 1,
+  "manifest_sha256": "b6bd9f39f2eb59580ab9b4bba83add901bee57701f4bca640367e286b4c89de6",
+  "owner": "measured-project-skills",
+  "prefix": "starter",
+  "skills": [
+    {
+      "alias": "starter-nextjs-cache-auth-boundary-review",
+      "invocation": "implicit",
+      "paths": [
+        ".agents/skills/starter-nextjs-cache-auth-boundary-review",
+        ".claude/skills/starter-nextjs-cache-auth-boundary-review"
+      ],
+      "skill": "nextjs-cache-auth-boundary-review"
+    },
+    {
+      "alias": "starter-nextjs-feature-delivery",
+      "invocation": "explicit",
+      "paths": [
+        ".codex/skills/starter-nextjs-feature-delivery",
+        ".claude/skills/starter-nextjs-feature-delivery"
+      ],
+      "skill": "nextjs-feature-delivery"
+    },
+    {
+      "alias": "starter-react-rendering-performance-diagnosis",
+      "invocation": "implicit",
+      "paths": [
+        ".agents/skills/starter-react-rendering-performance-diagnosis",
+        ".claude/skills/starter-react-rendering-performance-diagnosis"
+      ],
+      "skill": "react-rendering-performance-diagnosis"
+    }
+  ],
+  "source_commit": "e8a8bb56cb01ad9cf8c5f6c2ae3bd79516f00964"
+}
