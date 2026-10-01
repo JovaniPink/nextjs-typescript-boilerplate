@@ -1,6 +1,6 @@
 {
   "format_version": 1,
-  "source_commit": "e8a8bb56cb01ad9cf8c5f6c2ae3bd79516f00964",
+  "source_commit": "70182b250beb70bfb210e658387416b891918df1",
   "prefix": "starter",
   "contract": "docs/skills/contract.md",
   "skills": [

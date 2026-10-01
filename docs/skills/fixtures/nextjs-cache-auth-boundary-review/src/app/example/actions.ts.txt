@@ -1,0 +1,8 @@
+"use server";
+import { currentUser, RecordOwner, invalidate } from "./owner";
+export async function changeTitle(id: string, title: string) {
+  const user = await currentUser();
+  await RecordOwner.save(id, title);
+  invalidate("records");
+  return { user: user?.id };
+}

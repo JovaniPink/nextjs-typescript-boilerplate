@@ -25,7 +25,7 @@
     ".codex/skills/starter-nextjs-feature-delivery/references/project-contract.md": "fbc489dbeb2ba44f5ffd1efce02aa7e89338306ca85572c2ebc8c3f0f45a7b83"
   },
   "format_version": 1,
-  "manifest_sha256": "b6bd9f39f2eb59580ab9b4bba83add901bee57701f4bca640367e286b4c89de6",
+  "manifest_sha256": "bf1a372bda475c994a16c2783c052518ea504f3386a4eb9d7faf0bbd55d2e058",
   "owner": "measured-project-skills",
   "prefix": "starter",
   "skills": [
@@ -57,5 +57,5 @@
       "skill": "react-rendering-performance-diagnosis"
     }
   ],
-  "source_commit": "e8a8bb56cb01ad9cf8c5f6c2ae3bd79516f00964"
+  "source_commit": "70182b250beb70bfb210e658387416b891918df1"
 }

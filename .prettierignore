@@ -9,3 +9,4 @@ next-env.d.ts
 .codex/skills/
 .claude/skills/
 docs/skills/generated.json
+public/contracts/knowledge-object.v1.schema.json

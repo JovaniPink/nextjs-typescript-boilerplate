@@ -1,0 +1,15 @@
+"use client";
+import { useEffect, useState } from "react";
+export function Results({ items }: { items: string[] }) {
+  const [visible, setVisible] = useState<string[]>([]);
+  useEffect(() => {
+    setVisible(items.filter((item) => item.startsWith("S")));
+  }, [items]);
+  return (
+    <ul>
+      {visible.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
+  );
+}

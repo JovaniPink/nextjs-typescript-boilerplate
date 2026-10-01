@@ -1,0 +1,13 @@
+import { Filter } from "./filter";
+const entries = [
+  { id: "one", title: "Synthetic One" },
+  { id: "two", title: "Synthetic Two" },
+];
+export default function Page() {
+  return (
+    <main>
+      <h1>Examples</h1>
+      <Filter entries={entries} />
+    </main>
+  );
+}

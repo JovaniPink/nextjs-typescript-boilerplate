@@ -1,0 +1,11 @@
+const cache = new Map<string, unknown>();
+export async function personalRecord(
+  userID: string,
+  read: (id: string) => Promise<unknown>,
+) {
+  if (!cache.has("personal")) cache.set("personal", await read(userID));
+  return cache.get("personal");
+}
+export function logout() {
+  /* no cache invalidation */
+}
