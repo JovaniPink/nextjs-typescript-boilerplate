@@ -2,10 +2,10 @@
   "format_version": 1,
   "skill": "starter-nextjs-feature-delivery",
   "case_id": "starter-nextjs-feature-delivery-positive-1",
-  "prompt": "Use $starter-nextjs-feature-delivery. Implement the approved accessible filter route in src/app using the installed Next.js docs. This is an authored disposable fixture; the real template has no authentication or persistence capability. Do not introduce either to exercise the workflow.",
+  "prompt": "Use $starter-nextjs-feature-delivery. In a disposable copy, authorize changes only to the existing text snippet docs/skills/fixtures/nextjs-feature-delivery/src/app/example/filter.tsx.txt. Add a labelled search input and local query state to filter the supplied synthetic items. Keep this interaction in the existing client boundary. Use the owning installed-version documentation and Next 16.3.6/React 19.3 contract. The .txt snippets are not an installed application: report missing harness/build prerequisites as Blocked, never claim they compiled, and preserve all unrelated files.",
   "fixture_references": [
-    "docs/skills/contract.md",
     "docs/skills/cases.json",
+    "docs/skills/contract.md",
     "docs/skills/fixtures/nextjs-feature-delivery/CONTRACT.md",
     "docs/skills/fixtures/nextjs-feature-delivery/Unrelated/OwnerDraft.md",
     "docs/skills/fixtures/nextjs-feature-delivery/manifest.json",
@@ -84,5 +84,5 @@
   "independent_review": "pending",
   "behavioral_result": "not_run",
   "source_commit": "70182b250beb70bfb210e658387416b891918df1",
-  "case_sha256": "90642b80662c1d7972bc19747f0bf70848df123730c71e295d69be45e0630ccd"
+  "case_sha256": "89f2545153172adb329305f70acd03c5d9cab75e8d13a491181e2e8f5cf48c93"
 }

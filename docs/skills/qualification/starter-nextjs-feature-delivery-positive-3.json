@@ -2,10 +2,10 @@
   "format_version": 1,
   "skill": "starter-nextjs-feature-delivery",
   "case_id": "starter-nextjs-feature-delivery-positive-3",
-  "prompt": "Use $starter-nextjs-feature-delivery. Add the named client interaction without broadening the server/client boundary or changing the toolchain. This is an authored disposable fixture; the real template has no authentication or persistence capability. Do not introduce either to exercise the workflow.",
+  "prompt": "Use $starter-nextjs-feature-delivery. In a disposable copy, authorize changes only to the existing text snippet docs/skills/fixtures/nextjs-feature-delivery/src/app/example/error.tsx.txt. Expose an accessible Retry action invoking the supplied reset callback, without moving the server page into the client boundary. Use the owning installed-version documentation and Next 16.3.6/React 19.3 contract. The .txt snippets are not an installed application: report missing harness/build prerequisites as Blocked, never claim they compiled, and preserve all unrelated files.",
   "fixture_references": [
-    "docs/skills/contract.md",
     "docs/skills/cases.json",
+    "docs/skills/contract.md",
     "docs/skills/fixtures/nextjs-feature-delivery/CONTRACT.md",
     "docs/skills/fixtures/nextjs-feature-delivery/Unrelated/OwnerDraft.md",
     "docs/skills/fixtures/nextjs-feature-delivery/manifest.json",
@@ -84,5 +84,5 @@
   "independent_review": "pending",
   "behavioral_result": "not_run",
   "source_commit": "70182b250beb70bfb210e658387416b891918df1",
-  "case_sha256": "ddf17cd8a108e35b0b49b453384185f0f9ece2c90a2b055c67c77377fee45a57"
+  "case_sha256": "a7499e64bccddef078a3628e0aa5dc760bec7adf012f38139faf933ea418cd1e"
 }

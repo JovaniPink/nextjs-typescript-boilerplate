@@ -2,10 +2,10 @@
   "format_version": 1,
   "skill": "starter-nextjs-cache-auth-boundary-review",
   "case_id": "starter-nextjs-cache-auth-boundary-review-positive-1",
-  "prompt": "Review whether this server action authorizes writes before touching the data owner. This is an authored disposable fixture; the real template has no authentication or persistence capability. Do not introduce either to exercise the workflow.",
+  "prompt": "Trace authorization before the synthetic server mutation read-only using docs/skills/fixtures/nextjs-cache-auth-boundary-review/boundary-contract.md, docs/skills/fixtures/nextjs-cache-auth-boundary-review/src/app/example/actions.ts.txt. This is a disposable synthetic capability fixture, not evidence that the real template has authentication, persistence or personalized caching. Use the installed-version documentation; report absent real-template capabilities as Not Needed and do not introduce them.",
   "fixture_references": [
-    "docs/skills/contract.md",
     "docs/skills/cases.json",
+    "docs/skills/contract.md",
     "docs/skills/fixtures/nextjs-cache-auth-boundary-review/CONTRACT.md",
     "docs/skills/fixtures/nextjs-cache-auth-boundary-review/Unrelated/OwnerDraft.md",
     "docs/skills/fixtures/nextjs-cache-auth-boundary-review/boundary-contract.md",
@@ -82,5 +82,5 @@
   "independent_review": "pending",
   "behavioral_result": "not_run",
   "source_commit": "70182b250beb70bfb210e658387416b891918df1",
-  "case_sha256": "0bb69ac30d782d5d0800ebb30a7d259e1241614a03afb3b6564c1c9b131a2078"
+  "case_sha256": "c51509f87b60ba0925a49025bf4ca669ef1a967f08fd5e366f8eb18d32c5c877"
 }

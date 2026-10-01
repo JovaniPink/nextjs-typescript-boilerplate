@@ -2,10 +2,10 @@
   "format_version": 1,
   "skill": "starter-nextjs-cache-auth-boundary-review",
   "case_id": "starter-nextjs-cache-auth-boundary-review-positive-2",
-  "prompt": "Audit personalized response caching for cross-user data reuse. This is an authored disposable fixture; the real template has no authentication or persistence capability. Do not introduce either to exercise the workflow.",
+  "prompt": "Trace cross-user isolation of the synthetic cache key read-only using docs/skills/fixtures/nextjs-cache-auth-boundary-review/boundary-contract.md, docs/skills/fixtures/nextjs-cache-auth-boundary-review/src/app/example/cache.ts.txt. This is a disposable synthetic capability fixture, not evidence that the real template has authentication, persistence or personalized caching. Use the installed-version documentation; report absent real-template capabilities as Not Needed and do not introduce them.",
   "fixture_references": [
-    "docs/skills/contract.md",
     "docs/skills/cases.json",
+    "docs/skills/contract.md",
     "docs/skills/fixtures/nextjs-cache-auth-boundary-review/CONTRACT.md",
     "docs/skills/fixtures/nextjs-cache-auth-boundary-review/Unrelated/OwnerDraft.md",
     "docs/skills/fixtures/nextjs-cache-auth-boundary-review/boundary-contract.md",
@@ -82,5 +82,5 @@
   "independent_review": "pending",
   "behavioral_result": "not_run",
   "source_commit": "70182b250beb70bfb210e658387416b891918df1",
-  "case_sha256": "dedf2a0e999744c20c3ad4ddc80fb02862ac4acc95d0cd1b4e971a676d9a4d98"
+  "case_sha256": "1a0756ed460744a56f7511a7bbc7ee3b29db71e3b41bd27ab264316c9c2dd1e1"
 }

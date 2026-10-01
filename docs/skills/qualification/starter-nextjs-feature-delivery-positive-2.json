@@ -2,10 +2,10 @@
   "format_version": 1,
   "skill": "starter-nextjs-feature-delivery",
   "case_id": "starter-nextjs-feature-delivery-positive-2",
-  "prompt": "Use $starter-nextjs-feature-delivery. Deliver the requested server-rendered detail page and test its loading and error states. This is an authored disposable fixture; the real template has no authentication or persistence capability. Do not introduce either to exercise the workflow.",
+  "prompt": "Use $starter-nextjs-feature-delivery. In a disposable copy, authorize changes only to the existing text snippet docs/skills/fixtures/nextjs-feature-delivery/src/app/example/page.tsx.txt. Add a semantic page heading and descriptive link around the existing synthetic list while keeping the page server-rendered; do not add a provider or persistence. Use the owning installed-version documentation and Next 16.3.6/React 19.3 contract. The .txt snippets are not an installed application: report missing harness/build prerequisites as Blocked, never claim they compiled, and preserve all unrelated files.",
   "fixture_references": [
-    "docs/skills/contract.md",
     "docs/skills/cases.json",
+    "docs/skills/contract.md",
     "docs/skills/fixtures/nextjs-feature-delivery/CONTRACT.md",
     "docs/skills/fixtures/nextjs-feature-delivery/Unrelated/OwnerDraft.md",
     "docs/skills/fixtures/nextjs-feature-delivery/manifest.json",
@@ -84,5 +84,5 @@
   "independent_review": "pending",
   "behavioral_result": "not_run",
   "source_commit": "70182b250beb70bfb210e658387416b891918df1",
-  "case_sha256": "4ede1c80e2a796a6d3e68a741480c38439ccfb98311267e7c30dcc0c8e9bc7eb"
+  "case_sha256": "d5b055a6b3b1dc5068274c83fed4f99b53dbcff9480c8b8f2669b7e572e8637b"
 }

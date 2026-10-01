@@ -2,10 +2,10 @@
   "format_version": 1,
   "skill": "starter-react-rendering-performance-diagnosis",
   "case_id": "starter-react-rendering-performance-diagnosis-positive-2",
-  "prompt": "Investigate the observed sequential request waterfall for this route. This is an authored disposable fixture; the real template has no authentication or persistence capability. Do not introduce either to exercise the workflow.",
+  "prompt": "Investigate the sequential request waterfall read-only using docs/skills/fixtures/react-rendering-performance-diagnosis/trace.json, docs/skills/fixtures/react-rendering-performance-diagnosis/trace-contract.md, docs/skills/fixtures/react-rendering-performance-diagnosis/src/app/example/results.tsx.txt. These are authored synthetic measurements; distinguish them from captured production observations. Do not invent a speedup or mutate the real template; state what matched measurements would test the hypothesis.",
   "fixture_references": [
-    "docs/skills/contract.md",
     "docs/skills/cases.json",
+    "docs/skills/contract.md",
     "docs/skills/fixtures/react-rendering-performance-diagnosis/CONTRACT.md",
     "docs/skills/fixtures/react-rendering-performance-diagnosis/Unrelated/OwnerDraft.md",
     "docs/skills/fixtures/react-rendering-performance-diagnosis/manifest.json",
@@ -82,5 +82,5 @@
   "independent_review": "pending",
   "behavioral_result": "not_run",
   "source_commit": "70182b250beb70bfb210e658387416b891918df1",
-  "case_sha256": "ad4cbbc9b25b52573b4303937d3cb383e0518219b012a1c949dc09b881d8f064"
+  "case_sha256": "6a4174d39fcdf49af34e1f998e6576b6fefdd15a2bcaa0e5ddd244dd67b70250"
 }
