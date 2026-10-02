@@ -1,0 +1,16 @@
+{
+  "next": "16.3.6",
+  "react": "19.3.0",
+  "node_lanes": ["22.22.2", "24.15.0"],
+  "documentation": "installed node_modules/next/dist/docs authority; installation is not granted by this fixture",
+  "canonical_gates": [
+    "both TypeScript compilers",
+    "test-all",
+    "install-script policy",
+    "production audit",
+    "complete audit"
+  ],
+  "auth": "absent",
+  "persistence": "absent",
+  "cache_configuration": "absent"
+}

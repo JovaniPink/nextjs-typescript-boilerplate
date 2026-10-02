@@ -1,0 +1,34 @@
+name: Verify owned workflow projections
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  projections:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Read full owned-source pin
+        id: pin
+        run: |
+          python3 - <<'PYCODE'
+          import json, os, re
+          pin = json.load(open("docs/skills/project.json"))["source_commit"]
+          assert re.fullmatch(r"[0-9a-f]{40}", pin)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write("commit=" + pin + "\n")
+          PYCODE
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: JovaniPink/measured-skills
+          ref: ${{ steps.pin.outputs.commit }}
+          path: .owned-skill-source
+          persist-credentials: false
+      - name: Compare owned source and project contract bytes
+        run:
+          python3 .owned-skill-source/scripts/project_skills.py --source-root
+          .owned-skill-source --project-root . --check

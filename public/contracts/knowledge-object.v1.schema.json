@@ -1,0 +1,3177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+:source:[a-z0-9-]+$" },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "source" },
+        "source": {
+          "type": "object",
+          "properties": {
+            "canonicalUrl": { "type": "string", "format": "uri" },
+            "publisher": { "type": "string", "minLength": 1 },
+            "authors": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "authorityRole": {
+              "type": "string",
+              "enum": [
+                "publisher",
+                "official-record",
+                "primary-source",
+                "secondary-source",
+                "commentary"
+              ]
+            },
+            "accessStatus": {
+              "type": "string",
+              "enum": [
+                "open-access",
+                "registration-required",
+                "licensed",
+                "restricted"
+              ]
+            },
+            "license": { "type": "string", "minLength": 1 },
+            "methodologyWarnings": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            }
+          },
+          "required": [
+            "canonicalUrl",
+            "publisher",
+            "authorityRole",
+            "accessStatus",
+            "license",
+            "methodologyWarnings"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+:note:[a-z0-9-]+$" },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "note" },
+        "note": {
+          "type": "object",
+          "properties": {
+            "body": { "type": "string", "minLength": 1 },
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            }
+          },
+          "required": ["body", "sourceIds"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+:claim:[a-z0-9-]+$" },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "claim" },
+        "claim": {
+          "type": "object",
+          "properties": {
+            "statement": { "type": "string", "minLength": 1 },
+            "claimNature": {
+              "type": "string",
+              "enum": [
+                "observation",
+                "source-claim",
+                "interpretation",
+                "forecast",
+                "scenario",
+                "recommendation"
+              ]
+            },
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            }
+          },
+          "required": ["statement", "claimNature", "sourceIds"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "claim"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:dataset:[a-z0-9-]+$"
+        },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "dataset" },
+        "dataset": {
+          "type": "object",
+          "properties": {
+            "canonicalUrl": { "type": "string", "format": "uri" },
+            "publisher": { "type": "string", "minLength": 1 },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "accessConditions": { "type": "string", "minLength": 1 },
+            "license": { "type": "string", "minLength": 1 },
+            "methodologyWarnings": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            }
+          },
+          "required": [
+            "canonicalUrl",
+            "publisher",
+            "asOf",
+            "accessConditions",
+            "license",
+            "methodologyWarnings"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "dataset"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:scenario:[a-z0-9-]+$"
+        },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "scenario" },
+        "scenario": {
+          "type": "object",
+          "properties": {
+            "assumptions": {
+              "minItems": 1,
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "synthetic": { "type": "boolean" }
+          },
+          "required": ["assumptions", "sourceIds", "synthetic"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "scenario"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:model-run:[a-z0-9-]+$"
+        },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "model-run" },
+        "modelRun": {
+          "type": "object",
+          "properties": {
+            "methodVersion": { "type": "string", "minLength": 1 },
+            "runAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "inputIds": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "outputIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "deterministic": { "type": "boolean" },
+            "seed": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "methodVersion",
+            "runAt",
+            "inputIds",
+            "outputIds",
+            "deterministic"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "modelRun"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:forecast:[a-z0-9-]+$"
+        },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "forecast" },
+        "forecast": {
+          "type": "object",
+          "properties": {
+            "cutoffAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "target": { "type": "string", "minLength": 1 },
+            "horizon": { "type": "string", "minLength": 1 },
+            "methodVersion": { "type": "string", "minLength": 1 },
+            "sourceSnapshotIds": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "sourceSnapshotAsOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "prediction": {
+              "type": "object",
+              "properties": {
+                "probability": { "type": "number", "minimum": 0, "maximum": 1 },
+                "unit": { "type": "string", "const": "probability" }
+              },
+              "required": ["probability", "unit"],
+              "additionalProperties": false
+            },
+            "outcomeId": {
+              "type": "string",
+              "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+            }
+          },
+          "required": [
+            "cutoffAt",
+            "target",
+            "horizon",
+            "methodVersion",
+            "sourceSnapshotIds",
+            "sourceSnapshotAsOf",
+            "prediction"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "forecast"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:observation:[a-z0-9-]+$"
+        },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "observation" },
+        "observation": {
+          "type": "object",
+          "properties": {
+            "observedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "statement": { "type": "string", "minLength": 1 },
+            "sourceIds": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            }
+          },
+          "required": ["observedAt", "statement", "sourceIds"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "observation"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:evaluation:[a-z0-9-]+$"
+        },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "evaluation" },
+        "evaluation": {
+          "type": "object",
+          "properties": {
+            "evaluatedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "subjectIds": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "metrics": {
+              "type": "object",
+              "propertyNames": { "type": "string" },
+              "additionalProperties": { "type": "number" }
+            },
+            "conclusion": { "type": "string", "minLength": 1 }
+          },
+          "required": ["evaluatedAt", "subjectIds", "metrics", "conclusion"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "evaluation"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:retrospective:[a-z0-9-]+$"
+        },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "retrospective" },
+        "retrospective": {
+          "type": "object",
+          "properties": {
+            "periodStart": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "periodEnd": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "subjectIds": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "findings": {
+              "minItems": 1,
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "remainingUnknowns": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            }
+          },
+          "required": [
+            "periodStart",
+            "periodEnd",
+            "subjectIds",
+            "findings",
+            "remainingUnknowns"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "retrospective"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "schemaVersion": { "type": "string", "const": "1.0" },
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+:publication:[a-z0-9-]+$"
+        },
+        "projectId": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "legacyIds": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string", "minLength": 1 },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "createdAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "retrievedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "asOf": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "lastReviewedAt": {
+              "type": "string",
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            }
+          },
+          "required": ["createdAt"],
+          "additionalProperties": false
+        },
+        "provenance": {
+          "type": "object",
+          "properties": {
+            "sourceIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "methodIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "snapshotDigest": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          },
+          "required": ["sourceIds", "methodIds"],
+          "additionalProperties": false
+        },
+        "semantics": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "economics",
+                  "finance",
+                  "politics",
+                  "policy",
+                  "theology",
+                  "technology",
+                  "sports",
+                  "health",
+                  "philosophy",
+                  "history",
+                  "science"
+                ]
+              }
+            },
+            "topics": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+              }
+            },
+            "entities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "person",
+                      "organization",
+                      "place",
+                      "team",
+                      "policy",
+                      "instrument",
+                      "institution"
+                    ]
+                  },
+                  "name": { "type": "string", "minLength": 1 },
+                  "identifier": { "type": "string", "minLength": 1 },
+                  "canonicalUrl": { "type": "string", "format": "uri" }
+                },
+                "required": ["type", "name"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["domains", "topics", "tags", "entities"],
+          "additionalProperties": false
+        },
+        "evidenceStatus": {
+          "type": "string",
+          "enum": [
+            "unreviewed",
+            "source-reviewed",
+            "corroborated",
+            "contested",
+            "superseded",
+            "corrected"
+          ]
+        },
+        "editorialStatus": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "review",
+            "ready",
+            "published",
+            "corrected",
+            "archived"
+          ]
+        },
+        "visibility": {
+          "type": "string",
+          "enum": ["public", "sanitized", "private-source"]
+        },
+        "limitations": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "supports",
+                  "contradicts",
+                  "updates",
+                  "derived-from",
+                  "about",
+                  "used-by",
+                  "evaluates",
+                  "outcome-of",
+                  "related-to",
+                  "correction-of"
+                ]
+              },
+              "targetId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": ["type", "targetId"],
+            "additionalProperties": false
+          }
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:correction:[a-z0-9-]+$"
+              },
+              "recordedAt": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "summary": { "type": "string", "minLength": 1 },
+              "replacesObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              },
+              "replacementObjectId": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            },
+            "required": [
+              "id",
+              "recordedAt",
+              "summary",
+              "replacesObjectId",
+              "replacementObjectId"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "kind": { "type": "string", "const": "publication" },
+        "publication": {
+          "type": "object",
+          "properties": {
+            "canonicalUrl": { "type": "string", "format": "uri" },
+            "publishedAt": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+            },
+            "objectIds": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^[a-z0-9-]+:(source|note|claim|dataset|scenario|model-run|forecast|observation|evaluation|retrospective|publication):[a-z0-9-]+$"
+              }
+            }
+          },
+          "required": ["canonicalUrl", "publishedAt", "objectIds"],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "id",
+        "projectId",
+        "legacyIds",
+        "title",
+        "summary",
+        "dates",
+        "provenance",
+        "semantics",
+        "evidenceStatus",
+        "editorialStatus",
+        "visibility",
+        "limitations",
+        "relationships",
+        "corrections",
+        "kind",
+        "publication"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "$id": "urn:jovanipink:knowledge-contract:knowledge-object:v1",
+  "title": "KnowledgeObject v1",
+  "description": "Public-safe structural schema for traceable research, analysis, forecasts, evaluations, and publications."
+}

@@ -1,0 +1,12 @@
+{
+  "format_version": 1,
+  "source_commit": "70182b250beb70bfb210e658387416b891918df1",
+  "prefix": "starter",
+  "contract": "docs/skills/contract.md",
+  "skills": [
+    "nextjs-feature-delivery",
+    "nextjs-cache-auth-boundary-review",
+    "react-rendering-performance-diagnosis"
+  ],
+  "codex_version": "0.154.0"
+}

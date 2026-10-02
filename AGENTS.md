@@ -38,6 +38,7 @@ products that need them, not in the starter.
 | `corepack npm run lint`             | Run ESLint                                    |
 | `corepack npm run format:check`     | Verify Prettier formatting                    |
 | `corepack npm run starter:check`    | Validate install and route-type contracts     |
+| `corepack npm run knowledge:check`  | Verify the vendored knowledge contract        |
 | `corepack npm run toolchain:check`  | Validate the dual-compiler contract           |
 | `corepack npm run typecheck`        | Check with the TypeScript 7 native CLI        |
 | `corepack npm run typecheck:compat` | Check with the TypeScript 6 compatibility API |
@@ -58,6 +59,9 @@ products that need them, not in the starter.
   configuration without a concrete product requirement.
 - Keep dependencies pinned in `package.json` and update `package-lock.json` with the
   declared Corepack npm release.
+- Treat `public/contracts/knowledge-object.v1.schema.json` and its SHA-256 manifest as
+  one reviewed artifact. Update them only through `knowledge:sync` from an explicitly
+  selected artifact directory.
 - Review and explicitly allow or deny every new dependency install script; never use the
   global allow-all escape hatch.
 - Keep Git hooks offline-safe: invoke installed binaries directly and run npm scripts
@@ -81,3 +85,22 @@ Before finishing a code change, run:
 - `corepack npm run audit:dependencies`
 
 CI must continue to validate Node 22 and Node 24 from the committed lockfile.
+
+## Owned workflow routing
+
+Read [the project workflow contract](docs/skills/contract.md) and
+[projection guidance](docs/skills/README.md).
+
+- `starter-nextjs-feature-delivery`: explicit selection only; applies within task
+  authority.
+- `starter-nextjs-cache-auth-boundary-review`: read-only discovery when the request
+  matches its description.
+- `starter-react-rendering-performance-diagnosis`: read-only discovery when the request
+  matches its description.
+
+Skill selection does not grant permission for wider file mutation, dependencies,
+signing, migrations, live data or publication. Preserve root instructions and compare
+current settings with the contract; stale contracts block dependent work.
+
+Read [SKILLS.md](SKILLS.md) for branch-specific workflow availability, routing and
+evidence boundaries.

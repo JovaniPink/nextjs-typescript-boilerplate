@@ -1,0 +1,6 @@
+interface:
+  display_name: "Next.js Cache and Auth Boundary Review"
+  short_description: "Next.js Cache and Auth Boundary Review"
+  default_prompt: "Use $starter-nextjs-cache-auth-boundary-review for the identified bounded task and report observed evidence."
+policy:
+  allow_implicit_invocation: true

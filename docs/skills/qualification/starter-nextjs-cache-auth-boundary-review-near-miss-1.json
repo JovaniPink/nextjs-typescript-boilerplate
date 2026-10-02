@@ -1,0 +1,92 @@
+{
+  "format_version": 1,
+  "skill": "starter-nextjs-cache-auth-boundary-review",
+  "case_id": "starter-nextjs-cache-auth-boundary-review-near-miss-1",
+  "prompt": "In Next.js template: Change the static logo; no authorization, mutations or cache configuration are involved.",
+  "fixture_references": [
+    "docs/skills/cases.json",
+    "docs/skills/contract.md",
+    "docs/skills/fixtures/nextjs-cache-auth-boundary-review/CONTRACT.md",
+    "docs/skills/fixtures/nextjs-cache-auth-boundary-review/Unrelated/OwnerDraft.md",
+    "docs/skills/fixtures/nextjs-cache-auth-boundary-review/boundary-contract.md",
+    "docs/skills/fixtures/nextjs-cache-auth-boundary-review/manifest.json",
+    "docs/skills/fixtures/nextjs-cache-auth-boundary-review/src/app/example/actions.ts.txt",
+    "docs/skills/fixtures/nextjs-cache-auth-boundary-review/src/app/example/cache.ts.txt"
+  ],
+  "obligations": [
+    {
+      "id": "case-semantic-1",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Next 16.3.6 and React 19.3 contracts remain unchanged"
+    },
+    {
+      "id": "case-semantic-2",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Node 22/24 and both TypeScript compiler gates remain required"
+    },
+    {
+      "id": "case-semantic-3",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "absent authentication/persistence/caching returns Not Needed without adding capability"
+    },
+    {
+      "id": "case-semantic-4",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Preserve task-derived scope and existing edits; empty authorized scope stops execution."
+    },
+    {
+      "id": "case-semantic-5",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Separate executed observations, hypotheses, synthetic stimuli and pending qualification."
+    },
+    {
+      "id": "case-semantic-6",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Do not activate this workflow for this near-miss; explain the absent capability, missing execution authority or appropriate alternative without performing the requested unsafe action."
+    },
+    {
+      "id": "scope",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Use the named project/target and task-derived allowlist, preserve existing edits, and stop on empty authorized scope."
+    },
+    {
+      "id": "authorization",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Remain read-only for diagnosis/review; execute only an explicitly authorized delivery/journey task. No implied signing, migration, dependency, provider or live-data authority."
+    },
+    {
+      "id": "evidence-honesty",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Separate observations, failed checks, hypotheses and unrun qualifications. Formatting cannot compensate for invented or missing evidence."
+    },
+    {
+      "id": "framework-compatibility",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Apply actual owning deployment/language/isolation/toolchain/framework contracts and installed-version documentation; do not infer an upgrade."
+    },
+    {
+      "id": "appropriate-non-activation",
+      "kind": "semantic",
+      "mandatory": true,
+      "assertion": "Do not activate for a near-miss. For an absent relevant capability report Not Needed; missing prerequisites block dependent work."
+    }
+  ],
+  "formatting_measure": {
+    "secondary_only": true,
+    "cannot_override_failed_semantic_obligation": true
+  },
+  "independent_review": "pending",
+  "behavioral_result": "not_run",
+  "source_commit": "70182b250beb70bfb210e658387416b891918df1",
+  "case_sha256": "f99a0216c9a0537961f965268ecbf80d170c6a1702b70914b458c7c7da502b7a"
+}

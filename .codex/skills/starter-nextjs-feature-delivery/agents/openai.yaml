@@ -1,0 +1,6 @@
+interface:
+  display_name: "Next.js Feature Delivery"
+  short_description: "Next.js Feature Delivery"
+  default_prompt: "Use $starter-nextjs-feature-delivery for the identified bounded task and report observed evidence."
+policy:
+  allow_implicit_invocation: false
