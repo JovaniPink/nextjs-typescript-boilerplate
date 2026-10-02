@@ -101,3 +101,6 @@ Read [the project workflow contract](docs/skills/contract.md) and
 Skill selection does not grant permission for wider file mutation, dependencies,
 signing, migrations, live data or publication. Preserve root instructions and compare
 current settings with the contract; stale contracts block dependent work.
+
+Read [SKILLS.md](SKILLS.md) for branch-specific workflow availability, routing and
+evidence boundaries.
