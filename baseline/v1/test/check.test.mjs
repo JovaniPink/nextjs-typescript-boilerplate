@@ -45,14 +45,14 @@ function basePackage() {
       "audit:dependencies": "npm audit --audit-level=high",
     },
     dependencies: {
-      next: "16.3.6",
+      next: "16.3.8",
       react: "19.3.0",
       "react-dom": "19.3.0",
     },
     devDependencies: {
       "@typescript/native": "npm:typescript@7.0.2",
       eslint: "10.11.0",
-      "eslint-config-next": "16.3.6",
+      "eslint-config-next": "16.3.8",
       typescript: "6.0.3",
     },
   };
@@ -61,7 +61,7 @@ function basePackage() {
 function manifest(profile, nextApps = ["."]) {
   return {
     schemaVersion: "nextjs-baseline.manifest.v1",
-    baselineVersion: "1.1.0",
+    baselineVersion: "1.1.1",
     profile,
     projectRoot: ".",
     nextApps,
@@ -159,11 +159,11 @@ async function makeRepository(profile) {
     await addApp(root, "apps/web", appPackage);
   } else if (profile === "vinext") {
     const vinext = basePackage();
-    vinext.dependencies.next = "16.3.6";
+    vinext.dependencies.next = "16.3.8";
     vinext.dependencies.vinext = "1.0.0-beta.6";
     vinext.devDependencies.typescript = "6.0.3";
     vinext.devDependencies.eslint = "9.39.5";
-    vinext.devDependencies["eslint-config-next"] = "16.3.6";
+    vinext.devDependencies["eslint-config-next"] = "16.3.8";
     delete vinext.scripts["toolchain:check"];
     delete vinext.scripts["typecheck:compat"];
     vinext.scripts.dev = "vite";
@@ -230,7 +230,7 @@ test("rejects a manifest pinned to a different baseline version", async () => {
   await writeJson(join(root, ".github", "nextjs-baseline.json"), value);
   await assert.rejects(
     () => verify(root),
-    /pins 1\.0\.0 but this action implements 1\.1\.0/u,
+    /pins 1\.0\.0 but this action implements 1\.1\.1/u,
   );
 });
 

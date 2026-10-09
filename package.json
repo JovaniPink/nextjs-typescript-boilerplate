@@ -66,7 +66,7 @@
     "prepare": "node scripts/prepare.mjs"
   },
   "dependencies": {
-    "next": "16.3.6",
+    "next": "16.3.8",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
@@ -83,7 +83,7 @@
     "@types/react-dom": "19.3.0",
     "@typescript/native": "npm:typescript@7.0.2",
     "eslint": "10.11.0",
-    "eslint-config-next": "16.3.6",
+    "eslint-config-next": "16.3.8",
     "husky": "9.1.7",
     "jest": "30.5.2",
     "jest-environment-jsdom": "30.5.2",
