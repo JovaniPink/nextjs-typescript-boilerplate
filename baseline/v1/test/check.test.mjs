@@ -45,14 +45,14 @@ function basePackage() {
       "audit:dependencies": "npm audit --audit-level=high",
     },
     dependencies: {
-      next: "16.3.8",
+      next: "16.4.3",
       react: "19.3.0",
       "react-dom": "19.3.0",
     },
     devDependencies: {
       "@typescript/native": "npm:typescript@7.0.2",
-      eslint: "10.11.0",
-      "eslint-config-next": "16.3.8",
+      eslint: "9.39.5",
+      "eslint-config-next": "16.4.3",
       typescript: "6.0.3",
     },
   };
@@ -159,11 +159,11 @@ async function makeRepository(profile) {
     await addApp(root, "apps/web", appPackage);
   } else if (profile === "vinext") {
     const vinext = basePackage();
-    vinext.dependencies.next = "16.3.8";
+    vinext.dependencies.next = "16.4.3";
     vinext.dependencies.vinext = "1.0.0-beta.6";
     vinext.devDependencies.typescript = "6.0.3";
     vinext.devDependencies.eslint = "9.39.5";
-    vinext.devDependencies["eslint-config-next"] = "16.3.8";
+    vinext.devDependencies["eslint-config-next"] = "16.4.3";
     delete vinext.scripts["toolchain:check"];
     delete vinext.scripts["typecheck:compat"];
     vinext.scripts.dev = "vite";
@@ -379,7 +379,7 @@ test("an ESLint exception cannot hide framework-version drift", async () => {
   const root = await makeRepository("stock-server");
   const packagePath = join(root, "package.json");
   const pkg = JSON.parse(await readFile(packagePath, "utf8"));
-  pkg.devDependencies.eslint = "9.39.5";
+  pkg.devDependencies.eslint = "10.11.0";
   await writeJson(packagePath, pkg);
   const manifestPath = join(root, ".github", "nextjs-baseline.json");
   const value = manifest("stock-server");
