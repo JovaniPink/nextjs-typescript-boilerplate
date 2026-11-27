@@ -1,8 +1,19 @@
 # Baseline security patch - November 19, 2026
 
 Baseline 1.1.2 admits Next.js and `eslint-config-next` 16.4.6 in every profile. React,
-TypeScript, ESLint, runtime and deployment contracts are unchanged from 1.1.1. No
-consumer changes until it adopts an immutable reviewed action pin.
+TypeScript, ESLint, runtime and deployment contracts are unchanged from 1.1.1.
+
+## What consumers pinned to 1.1.1 will see
+
+Push and pull request checks continue to use the consumer's pinned 1.1.1 verifier. Once
+this change merges, `baseline/v1/latest.json` on `main` advertises 1.1.2. The next
+scheduled check reads that file and fails with `baseline-currency` because the
+consumer's manifest still declares 1.1.1.
+
+To adopt 1.1.2, update the baseline action pin to
+`4defc1dbe949e6c3032c0160684340586b12cc36`, set `baselineVersion` to `1.1.2` in
+`.github/nextjs-baseline.json`, and update `next` and `eslint-config-next` to `16.4.6`
+in the applicable package manifests and lockfiles.
 
 ## Why
 
